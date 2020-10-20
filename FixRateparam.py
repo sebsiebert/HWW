@@ -5,7 +5,7 @@ directory = sys.argv[1] # output/Full2018_indep/
 
 path1 = directory #"output/"+directory+"/"
 if path1[-1] != "/": path1 = path1+"/"
-firstdirs = [f for f in os.listdir(path1)]
+firstdirs = [f for f in os.listdir(path1) if os.path.isdir(f)]
 
 for dirs in firstdirs:
   path = path1 + dirs + "/"
@@ -19,7 +19,7 @@ for dirs in firstdirs:
 
     alreadydone = False
     for idx,line in enumerate(content):
-      
+
       if ("rateParam" in line) and not ('1 [0,5]' in line): content[idx] = '1 [0,5]'.join(line.rsplit('1', 1)) # Setting range for rateParam
       #if line.startswith("bin") and listofchannels == []: listofchannels = line.split()[1:] # Getting list of channels
 

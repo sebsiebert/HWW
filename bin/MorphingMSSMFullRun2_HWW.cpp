@@ -32,28 +32,24 @@ using boost::starts_with;
 namespace po = boost::program_options;
 
 
-bool IsCompletelyZero(const TH1* const shape) {
-    // which one?
-    return shape->GetEntries()==0.0;
-    // return shape->GetSumOfWeights()==0.0;
 
-    // bool onlyPositive{ true };
-    // Double_t integral{ shape->ComputeIntegral(onlyPositive) };
-    // if (TMath::IsNaN(integral)) {
-    //     throw std::runtime_error("Negative bin content in shape!");
-    // }
-    // return integral == 0;
+bool IsCompletelyZero(TH1 const* h) {
+  double content = 0.0;
+  for (int i = 1; i <= h->GetNbinsX(); ++i) {
+    content = content + h->GetBinContent(i);
+  }
+  bool itszero = false;
+  if (content <= 0.0){itszero = true;}
+  return itszero;
 }
 
-void SymmetrizeSystematic(const TH1* const nominal, TH1* const up, TH1* const down) {
-
-    unique_ptr<TH1> tempMean{static_cast<TH1*>(nominal->Clone())};
-
-    tempMean->Add(up, down, 0.5, -0.5);
-    up->Add(nominal, tempMean.get(), 1, 1);
-    down->Add(nominal, tempMean.get(), 1, -1);
+void SymmetrizeSystematic(TH1 const *hnom, TH1 *hsysgood, TH1 *hsysbad) {
+  for (int i = 1; i <= hnom->GetNbinsX(); ++i) {
+    //std::cout << "Bin " << i << " : Nom " << hnom->GetBinContent(i) << ", Good " << hsysgood->GetBinContent(i) << ", Bad " << hsysbad->GetBinContent(i) << std::endl;
+    //std::cout << "New Bin Content will be " << hnom->GetBinContent(i) + (hnom->GetBinContent(i) - hsysgood->GetBinContent(i)) << std::endl;
+    hsysbad->SetBinContent(i, hnom->GetBinContent(i) + (hnom->GetBinContent(i) - hsysgood->GetBinContent(i)));
+  }
 }
-
 
 template <typename T>
 void To1Bin(T* proc)
@@ -99,7 +95,7 @@ int main(int argc, char** argv) {
   // First define the location of the "auxiliaries" directory where we can
   // source the input files containing the datacard shapes
   string SM125= "";
-  string mass = "mH"; // Should be "MH" for indep
+  string mass = "MH"; // Should be "MH" for indep
   string output_folder = "FullRun2";
   string model = "_RelW002";//"_c10brn00"; // RelW0.05 TODO Temp Semilep
   string shapedir = "";
@@ -120,7 +116,7 @@ int main(int argc, char** argv) {
   bool do2016semi = false;
   bool do2017semi = false;
   bool do2018semi = false;
-  bool DNNdiscrim = true;
+  bool DNNdiscrim = false;
   po::variables_map vm;
   po::options_description config("configuration");
   config.add_options()
@@ -150,83 +146,50 @@ int main(int argc, char** argv) {
   typedef vector<string> VString;
   typedef vector<pair<int, string>> Categories;
   std::map<string, string> input_dir;
-  shapedir = "/afs/cern.ch/work/s/ssiebert/public/"+shapedir+"/";
+  shapedir = "/afs/cern.ch/work/s/ssiebert/CMSSW_10_6_4/src/PlotsConfigurations/Configurations/HWWSemiLepHighMass/"+shapedir+"/";
 
-  if (do2018){
-    input_dir["em8"]     = shapedir+"plots_Full2018_em_new.root";
-    input_dir["em8_top"] = input_dir["em8"];
-    input_dir["em8_dy"]  = input_dir["em8"];
-    input_dir["ee8"]     = shapedir+"plots_Full2018_ee_new.root";
-    input_dir["ee8_top"] = input_dir["ee8"];
-    input_dir["ee8_dy"]  = input_dir["ee8"];
-    input_dir["mm8"]     = shapedir+"plots_Full2018_mm_new.root";
-    input_dir["mm8_top"] = input_dir["mm8"];
-    input_dir["mm8_dy"]  = input_dir["mm8"];
-  }
-  if (do2017){
-    input_dir["em7"]     = shapedir+"plots_Full2017_em_new.root";
-    input_dir["em7_top"] = input_dir["em7"];
-    input_dir["em7_dy"]  = input_dir["em7"];
-    input_dir["ee7"]     = shapedir+"plots_Full2017_ee_new.root";
-    input_dir["ee7_top"] = input_dir["ee7"];
-    input_dir["ee7_dy"]  = input_dir["ee7"];
-    input_dir["mm7"]     = shapedir+"plots_Full2017_mm_new.root";
-    input_dir["mm7_top"] = input_dir["mm7"];
-    input_dir["mm7_dy"]  = input_dir["mm7"];
-  }
-  if (do2016){
-    input_dir["em6"]     = shapedir+"plots_Full2016_em_new.root";
-    input_dir["em6_top"] = input_dir["em6"];
-    input_dir["em6_dy"]  = input_dir["em6"];
-    input_dir["ee6"]     = shapedir+"plots_Full2016_ee_new.root";
-    input_dir["ee6_top"] = input_dir["ee6"];
-    input_dir["ee6_dy"]  = input_dir["ee6"];
-    input_dir["mm6"]     = shapedir+"plots_Full2016_mm_new.root";
-    input_dir["mm6_top"] = input_dir["mm6"];
-    input_dir["mm6_dy"]  = input_dir["mm6"];
-  }
   if (do2016semi){
-    input_dir["eqq6"]        = shapedir+"plots_HMlnjj_2016.root";
+    input_dir["eqq6"]        = shapedir+"Full2016_v7/rootFile/plots_hm_resolv_2016_v7.root";
     input_dir["eqq6_top"]    = input_dir["eqq6"];
     input_dir["eqq6_wj"]     = input_dir["eqq6"];
     input_dir["mqq6"]        = input_dir["eqq6"];
     input_dir["mqq6_top"]    = input_dir["eqq6"];
     input_dir["mqq6_wj"]     = input_dir["eqq6"];
-    input_dir["eqq6_bs"]     = input_dir["eqq6"];
-    input_dir["eqq6_top_bs"] = input_dir["eqq6"];
-    input_dir["eqq6_wj_bs"]  = input_dir["eqq6"];
-    input_dir["mqq6_bs"]     = input_dir["eqq6"];
-    input_dir["mqq6_top_bs"] = input_dir["eqq6"];
-    input_dir["mqq6_wj_bs"]  = input_dir["eqq6"];
+    // input_dir["eqq6_bs"]     = shapedir+"Full2016_v7/rootFile/plots_hm_boost_2016_v7.root";
+    // input_dir["eqq6_top_bs"] = input_dir["eqq6_bs"];
+    // input_dir["eqq6_wj_bs"]  = input_dir["eqq6_bs"];
+    // input_dir["mqq6_bs"]     = input_dir["eqq6_bs"];
+    // input_dir["mqq6_top_bs"] = input_dir["eqq6_bs"];
+    // input_dir["mqq6_wj_bs"]  = input_dir["eqq6_bs"];
   }
   if (do2017semi){
-    input_dir["eqq7"]        = shapedir+"plots_HMlnjj_2017.root";
+    input_dir["eqq7"]        = shapedir+"Full2017_v7/rootFile/plots_hm_resolv_2017_v7.root";
     input_dir["eqq7_top"]    = input_dir["eqq7"];
     input_dir["eqq7_wj"]     = input_dir["eqq7"];
     input_dir["mqq7"]        = input_dir["eqq7"];
     input_dir["mqq7_top"]    = input_dir["eqq7"];
     input_dir["mqq7_wj"]     = input_dir["eqq7"];
-    input_dir["eqq7_bs"]     = input_dir["eqq7"];
-    input_dir["eqq7_top_bs"] = input_dir["eqq7"];
-    input_dir["eqq7_wj_bs"]  = input_dir["eqq7"];
-    input_dir["mqq7_bs"]     = input_dir["eqq7"];
-    input_dir["mqq7_top_bs"] = input_dir["eqq7"];
-    input_dir["mqq7_wj_bs"]  = input_dir["eqq7"];
+    // input_dir["eqq7_bs"]     = shapedir+"Full2017_v7/rootFile/plots_hm_boost_2017_v7.root";
+    // input_dir["eqq7_top_bs"] = input_dir["eqq7_bs"];
+    // input_dir["eqq7_wj_bs"]  = input_dir["eqq7_bs"];
+    // input_dir["mqq7_bs"]     = input_dir["eqq7_bs"];
+    // input_dir["mqq7_top_bs"] = input_dir["eqq7_bs"];
+    // input_dir["mqq7_wj_bs"]  = input_dir["eqq7_bs"];
   }
 
   if (do2018semi){
-    input_dir["eqq8"]        = shapedir+"plots_Semilep_2018_new.root";
+    input_dir["eqq8"]        = shapedir+"Full2018_v7/rootFile/plots_hm_resolv_2018_v7.root";
     input_dir["eqq8_top"]    = input_dir["eqq8"];
     input_dir["eqq8_wj"]     = input_dir["eqq8"];
     input_dir["mqq8"]        = input_dir["eqq8"];
     input_dir["mqq8_top"]    = input_dir["eqq8"];
     input_dir["mqq8_wj"]     = input_dir["eqq8"];
-    input_dir["eqq8_bs"]     = input_dir["eqq8"];
-    input_dir["eqq8_top_bs"] = input_dir["eqq8"];
-    input_dir["eqq8_wj_bs"]  = input_dir["eqq8"];
-    input_dir["mqq8_bs"]     = input_dir["eqq8"];
-    input_dir["mqq8_top_bs"] = input_dir["eqq8"];
-    input_dir["mqq8_wj_bs"]  = input_dir["eqq8"];
+    input_dir["eqq8_bs"]     = shapedir+"Full2018_v7/rootFile/plots_hm_boost_2018_v7.root";
+    input_dir["eqq8_top_bs"] = input_dir["eqq8_bs"];
+    input_dir["eqq8_wj_bs"]  = input_dir["eqq8_bs"];
+    input_dir["mqq8_bs"]     = input_dir["eqq8_bs"];
+    input_dir["mqq8_top_bs"] = input_dir["eqq8_bs"];
+    input_dir["mqq8_wj_bs"]  = input_dir["eqq8_bs"];
   }
 
   VString chns;
@@ -242,18 +205,11 @@ int main(int argc, char** argv) {
 
   for (auto it : input_dir){
     if(it.first.find("qq") != std::string::npos){ //Semilep
-      bkg_procs[it.first] = {"DY", "VVV", "VZ", "Vg", "WW", "WWewk", "VgS_H", "VgS_L", "ggWW", "qqWWqq", "WW2J", "top", "Wjets", "QCD"};
-    }else if(it.first.find("em") != std::string::npos){ //Dilep em
-      bkg_procs[it.first] = {"DY", "DYemb", "Fake_em", "Fake_me", "VVV", "VZ", "Vg", "WW", "WWewk", "VgS_H", "VgS_L", "ggWW", "qqWWqq", "WW2J", "top"};
-    }else if(it.first.find("ee") != std::string::npos){ //Dilep ee
-      bkg_procs[it.first] = {"DY",          "Fake_ee",            "VVV", "VZ", "Vg", "WW", "WWewk", "VgS_H", "VgS_L", "ggWW", "qqWWqq", "WW2J", "top"};
-    }else if(it.first.find("mm") != std::string::npos){ //Dilep mm
-      bkg_procs[it.first] = {"DY",          "Fake_mm",            "VVV", "VZ", "Vg", "WW", "WWewk", "VgS_H", "VgS_L", "ggWW", "qqWWqq", "WW2J", "top"};
+      bkg_procs[it.first] = {"DY", "VVV", "VZ", "Vg", "WW", "WWewk", "VgS_H", "VgS_L", "ggWW", "qqWWqq", "WW2J", "top", "Wjets", "QCD", "FAKE"};
     }
   }
 
   VString SM_procs = {"ggH_hww", "qqH_hww", "WH_hww", "ZH_hww", "ggH_htt", "qqH_htt", "WH_htt", "ZH_htt"};
-  //VString SM_procs = {"ggH_hww", "qqH_hww", "WH_hww", "ZH_hww", "ggH_htt", "qqH_htt", "ZH_htt"}; // TODO Semilep add "WH_htt"
 
   // Create an empty CombineHarvester instance that will hold all of the
   // datacard configuration and histograms etc.
@@ -265,188 +221,58 @@ int main(int argc, char** argv) {
   // the vector below specifies a bin name and corresponding bin_id.
   //
   map<string,Categories> cats;
-  if (!highindep){
 
   for(auto year: std::vector<std::string> {"8", "7", "6"}){
-  cats["em"+year+"_13TeV"] = {
-    {6, "em_ggh"},
-    {7, "em_vbf"},
-    };
-  cats["em"+year+"_top_13TeV"] = {
-    {10, "em_top_ggh"},
-    {11, "em_top_vbf"},
-    };
-  cats["em"+year+"_dy_13TeV"] = {
-    {12, "em_dy_ggh"},
-    {13, "em_dy_vbf"},
-    };
-  cats["ee"+year+"_13TeV"] = {
-    {6, "ee_ggh"},
-    {7, "ee_vbf"},
-    };
-  cats["ee"+year+"_top_13TeV"] = {
-    {10, "ee_top_ggh"},
-    {11, "ee_top_vbf"},
-    };
-  cats["ee"+year+"_dy_13TeV"] = {
-    {12, "ee_dy_ggh"},
-    {13, "ee_dy_vbf"},
-    };
-  cats["mm"+year+"_13TeV"] = {
-    {6, "mm_ggh"},
-    {7, "mm_vbf"},
-    };
-  cats["mm"+year+"_top_13TeV"] = {
-    {10, "mm_top_ggh"},
-    {11, "mm_top_vbf"},
-    };
-  cats["mm"+year+"_dy_13TeV"] = {
-    {12, "mm_dy_ggh"},
-    {13, "mm_dy_vbf"},
-    };
-  }
 
-  }else{
-
-  for(auto year: std::vector<std::string> {"8", "7", "6"}){
-  cats["em"+year+"_13TeV"] = {
-    {6, "em_highggh"},
-    {7, "em_highvbf"},
-    };
-  cats["em"+year+"_top_13TeV"] = {
-    {10, "em_top_highggh"},
-    {11, "em_top_highvbf"},
-    };
-//  cats["em"+year+"_dy_13TeV"] = {
-//    {12, "em_dy_highggh"},
-//    {13, "em_dy_highvbf"},
-//    };
-  cats["ee"+year+"_13TeV"] = {
-    {6, "ee_highggh"},
-    {7, "ee_highvbf"},
-    };
-  cats["ee"+year+"_top_13TeV"] = {
-    {10, "ee_top_highggh"},
-    {11, "ee_top_highvbf"},
-    };
-  //cats["ee"+year+"_dy_13TeV"] = {
-  //  {12, "ee_dy_highggh"},
-  //  {13, "ee_dy_highvbf"},
-  //  };
-  cats["mm"+year+"_13TeV"] = {
-    {6, "mm_highggh"},
-    {7, "mm_highvbf"},
-    };
-  cats["mm"+year+"_top_13TeV"] = {
-    {10, "mm_top_highggh"},
-    {11, "mm_top_highvbf"},
-    };
-  //cats["mm"+year+"_dy_13TeV"] = {
-  //  {12, "mm_dy_highggh"},
-  //  {13, "mm_dy_highvbf"},
-  //  };
-  }
-
-  }
-
-  for(auto year: std::vector<std::string> {"8", "7", "6"}){
-/*  cats["eqq"+year+"_13TeV"] = {
-    {6, "ElCh_Untagged_ResolvedSR_"},
+  cats["eqq"+year+"_13TeV"] = {
+    {6, "ElCh_GGF_ResolvedSR_"},
     {7, "ElCh_VBF_ResolvedSR_"},
     };
   cats["eqq"+year+"_top_13TeV"] = {
-    {10, "ElCh_Untagged_ResolvedTopCR_"},
+    {10, "ElCh_GGF_ResolvedTopCR_"},
     {11, "ElCh_VBF_ResolvedTopCR_"},
     };
   cats["eqq"+year+"_wj_13TeV"] = {
-    {12, "ElCh_Untagged_ResolvedSB_"},
+    {12, "ElCh_GGF_ResolvedSB_"},
     {13, "ElCh_VBF_ResolvedSB_"},
     };
   cats["mqq"+year+"_13TeV"] = {
-    {6, "MuCh_Untagged_ResolvedSR_"},
+    {6, "MuCh_GGF_ResolvedSR_"},
     {7, "MuCh_VBF_ResolvedSR_"},
     };
   cats["mqq"+year+"_top_13TeV"] = {
-    {10, "MuCh_Untagged_ResolvedTopCR_"},
+    {10, "MuCh_GGF_ResolvedTopCR_"},
     {11, "MuCh_VBF_ResolvedTopCR_"},
     };
   cats["mqq"+year+"_wj_13TeV"] = {
-    {12, "MuCh_Untagged_ResolvedSB_"},
+    {12, "MuCh_GGF_ResolvedSB_"},
     {13, "MuCh_VBF_ResolvedSB_"},
     };
-  cats["eqq"+year+"_bs_13TeV"] = {
-    {6, "ElCh_Untagged_BoostedSR_"},
-    {7, "ElCh_VBF_BoostedSR_"},
-    };
-  cats["eqq"+year+"_top_bs_13TeV"] = {
-    {10, "ElCh_Untagged_BoostedTopCR_"},
-    {11, "ElCh_VBF_BoostedTopCR_"},
-    };
-  cats["eqq"+year+"_wj_bs_13TeV"] = {
-    {12, "ElCh_Untagged_BoostedSB_"},
-    {13, "ElCh_VBF_BoostedSB_"},
-    };
-  cats["mqq"+year+"_bs_13TeV"] = {
-    {6, "MuCh_Untagged_BoostedSR_"},
-    {7, "MuCh_VBF_BoostedSR_"},
-    };
-  cats["mqq"+year+"_top_bs_13TeV"] = {
-    {10, "MuCh_Untagged_BoostedTopCR_"},
-    {11, "MuCh_VBF_BoostedTopCR_"},
-    };
-  cats["mqq"+year+"_wj_bs_13TeV"] = {
-    {12, "MuCh_Untagged_BoostedSB_"},
-    {13, "MuCh_VBF_BoostedSB_"},
-    };*/
+  // cats["eqq"+year+"_bs_13TeV"] = {
+  //   {6, "ElCh_GGF_BoostedSR_"},
+  //   {7, "ElCh_VBF_BoostedSR_"},
+  //   };
+  // cats["eqq"+year+"_top_bs_13TeV"] = {
+  //   {10, "ElCh_GGF_oostedTopCR_"},
+  //   {11, "ElCh_VBF_BoostedTopCR_"},
+  //   };
+  // cats["eqq"+year+"_wj_bs_13TeV"] = {
+  //   {12, "ElCh_GGF_BoostedSB_"},
+  //   {13, "ElCh_VBF_BoostedSB_"},
+  //   };
+  // cats["mqq"+year+"_bs_13TeV"] = {
+  //   {6, "MuCh_GGF_BoostedSR_"},
+  //   {7, "MuCh_VBF_BoostedSR_"},
+  //   };
+  // cats["mqq"+year+"_top_bs_13TeV"] = {
+  //   {10, "MuCh_GGF_BoostedTopCR_"},
+  //   {11, "MuCh_VBF_BoostedTopCR_"},
+  //   };
+  // cats["mqq"+year+"_wj_bs_13TeV"] = {
+  //   {12, "MuCh_GGF_BoostedSB_"},
+  //   {13, "MuCh_VBF_BoostedSB_"},
+  //   };
 
-  cats["eqq"+year+"_13TeV"] = {
-    {6, "ElCh_incl_ResolvedSR_"},
-    //{7, "ElCh_VBF_ResolvedSR_"},
-    };
-  cats["eqq"+year+"_top_13TeV"] = {
-    {10, "ElCh_incl_ResolvedTopCR_"},
-    //{11, "ElCh_VBF_ResolvedTopCR_"},
-    };
-  cats["eqq"+year+"_wj_13TeV"] = {
-    {12, "ElCh_incl_ResolvedSB_"},
-    //{13, "ElCh_VBF_ResolvedSB_"},
-    };
-  cats["mqq"+year+"_13TeV"] = {
-    {6, "MuCh_incl_ResolvedSR_"},
-    //{7, "MuCh_VBF_ResolvedSR_"},
-    };
-  cats["mqq"+year+"_top_13TeV"] = {
-    {10, "MuCh_incl_ResolvedTopCR_"},
-    //{11, "MuCh_VBF_ResolvedTopCR_"},
-    };
-  cats["mqq"+year+"_wj_13TeV"] = {
-    {12, "MuCh_incl_ResolvedSB_"},
-    //{13, "MuCh_VBF_ResolvedSB_"},
-    };
-  cats["eqq"+year+"_bs_13TeV"] = {
-    {6, "ElCh_all6_HMSR_"},
-    //{7, "ElCh_VBF_BoostedSR_"},
-    };
-  cats["eqq"+year+"_top_bs_13TeV"] = {
-    {10, "ElCh_all6_HMTopCR_"},
-    //{11, "ElCh_VBF_BoostedTopCR_"},
-    };
-  cats["eqq"+year+"_wj_bs_13TeV"] = {
-    {12, "ElCh_all6_HMSB_"},
-    //{13, "ElCh_VBF_BoostedSB_"},
-    };
-  cats["mqq"+year+"_bs_13TeV"] = {
-    {6, "MuCh_all6_HMSR_"},
-    //{7, "MuCh_VBF_BoostedSR_"},
-    };
-  cats["mqq"+year+"_top_bs_13TeV"] = {
-    {10, "MuCh_all6_HMTopCR_"},
-    //{11, "MuCh_VBF_BoostedTopCR_"},
-    };
-  cats["mqq"+year+"_wj_bs_13TeV"] = {
-    {12, "MuCh_all6_HMSB_"},
-    //{13, "MuCh_VBF_BoostedSB_"},
-    };
   }
 
   map<string, VString> masses;
@@ -456,10 +282,7 @@ int main(int argc, char** argv) {
       masses[it.first] = {"400", "450", "500", "550", "600", "650", "700", "750", "800", "900", "1000", "1500", "2000", "2500", "3000", "4000", "5000"};
     }else if(it.first.find("qq") != std::string::npos && it.first.find("bs") == std::string::npos){ //Semilep resolved
       masses[it.first] = {"115", "120", "124", "125", "126", "130", "135", "140", "145", "150", "155", "160", "165", "170", "175", "180", "190", "200", "210", "230", "250", "270", "300", "350", "400", "450", "500", "550", "600"};
-    }else if(it.first.find("6") == std::string::npos){ //Dilep 2017/18
       masses[it.first] = {"115", "120", "124", "125", "126", "130", "135", "140", "145", "150", "155", "160", "165", "170", "175", "180", "190", "200", "210", "230", "250", "270", "300", "350", "400", "450", "500", "550", "600", "650", "700", "750", "800", "900", "1000", "1500", "2000", "2500", "3000", "4000", "5000"};
-    }else if(it.first.find("ee") != std::string::npos){ //Dilep 2016
-      masses[it.first] = {"115", "120", "124", "125", "126", "130", "135", "140", "145", "150", "155", "160", "165", "170", "175", "180", "190", "200", "210", "230", "250", "270", "300", "350", "400", "450", "500", "550", "600", "650", "700", "750", "800", "900", "1000", "1500", "2000", "2500", "3000", "4000"};
     }
   }
 
@@ -495,7 +318,7 @@ int main(int argc, char** argv) {
   if(chn.find("qq") != std::string::npos){    //Semilep
 
     std::string discrim = "resolvHiggsMass";
-    if (chn.find("bs") != std::string::npos) discrim = "boostHigssMass"; // TODO typo
+    if (chn.find("bs") != std::string::npos) discrim = "boostHiggsMass";
     if (chn.find("top") != std::string::npos || chn.find("wj") != std::string::npos) discrim = "events";
 
     cb.cp().channel({chn}).backgrounds().ExtractShapes(
@@ -519,38 +342,6 @@ int main(int argc, char** argv) {
         input_dir[chn],
         "$BIN/"+discrim+"/histo_QQHSBI_$MASS"+model,
         "$BIN/"+discrim+"/histo_QQHSBI_$MASS"+model+"_$SYSTEMATIC");
-
-  }else{    //Dilep
-
-    std::string discrim = "events";
-    if( chn.find("top") == std::string::npos && chn.find("dy") == std::string::npos ){
-      discrim = "mTi_binning";
-      if (highindep) discrim = "mTi_highbinning";
-      if (DNNdiscrim) discrim = "DNN_mth_binning";
-      if (DNNdiscrim && highindep) discrim = "DNN_mth_highbinning";
-    }
-
-    cb.cp().channel({chn}).backgrounds().ExtractShapes(
-        input_dir[chn],
-        "hww2l2v_13TeV_$BIN/"+discrim+"/histo_$PROCESS",
-        "hww2l2v_13TeV_$BIN/"+discrim+"/histo_$PROCESS_$SYSTEMATIC");
-
-    cb.cp().channel({chn}).process({"ggH_HWW"}).ExtractShapes(
-        input_dir[chn],
-        "hww2l2v_13TeV_$BIN/"+discrim+"/histo_GGH_$MASS"+model,
-        "hww2l2v_13TeV_$BIN/"+discrim+"/histo_GGH_$MASS"+model+"_$SYSTEMATIC");
-    cb.cp().channel({chn}).process({"ggH_HWWSBI"}).ExtractShapes(
-        input_dir[chn],
-        "hww2l2v_13TeV_$BIN/"+discrim+"/histo_GGHSBI_$MASS"+model,
-        "hww2l2v_13TeV_$BIN/"+discrim+"/histo_GGHSBI_$MASS"+model+"_$SYSTEMATIC");
-    cb.cp().channel({chn}).process({"qqH_HWW"}).ExtractShapes(
-        input_dir[chn],
-        "hww2l2v_13TeV_$BIN/"+discrim+"/histo_QQH_$MASS"+model,
-        "hww2l2v_13TeV_$BIN/"+discrim+"/histo_QQH_$MASS"+model+"_$SYSTEMATIC");
-    cb.cp().channel({chn}).process({"qqH_HWWSBI"}).ExtractShapes(
-        input_dir[chn],
-        "hww2l2v_13TeV_$BIN/"+discrim+"/histo_QQHSBI_$MASS"+model,
-        "hww2l2v_13TeV_$BIN/"+discrim+"/histo_QQHSBI_$MASS"+model+"_$SYSTEMATIC");
 
   }
 
@@ -663,7 +454,8 @@ int main(int argc, char** argv) {
     // useful to be able to check this, so don't do the replacement
     // for these
   if(!real_data){
-      for (auto b : cb.cp().FilterAll(BinIsControlRegion).bin_set()) {
+      // for (auto b : cb.cp().FilterAll(BinIsControlRegion).bin_set()) {
+      for (auto b : cb.cp().bin_set()) { // DO asimov also in CR!
           std::cout << " - Replacing data with asimov in bin " << b << "\n";
           cb.cp().bin({b}).ForEachObs([&](ch::Observation *obs) {
             obs->set_shape(cb.cp().bin({b}).backgrounds().GetShape(), true);
@@ -677,78 +469,79 @@ int main(int argc, char** argv) {
   //cb.cp().FilterAll(BinIsNotControlRegion).ForEachProc(To1Bin<ch::Process>);
   //cb.cp().FilterAll(BinIsNotControlRegion).ForEachObs(To1Bin<ch::Observation>);
 
-  // Rebinning
-  // --------------------
-  // Keep track of shapes before and after rebinning for comparison
-  // and for checking the effect of negative bin contents
-  std::map<std::string, TH1F> before_rebin;
-  std::map<std::string, TH1F> after_rebin;
-  std::map<std::string, TH1F> after_rebin_neg;
-  if (check_neg_bins) {
-    for (auto b : bins) {
-      before_rebin[b] = cb.cp().bin({b}).backgrounds().GetShape();
-    }
-  }
+  // // Rebinning
+  // // --------------------
+  // // Keep track of shapes before and after rebinning for comparison
+  // // and for checking the effect of negative bin contents
+  // std::map<std::string, TH1F> before_rebin;
+  // std::map<std::string, TH1F> after_rebin;
+  // std::map<std::string, TH1F> after_rebin_neg;
+  // if (check_neg_bins) {
+  //   for (auto b : bins) {
+  //     before_rebin[b] = cb.cp().bin({b}).backgrounds().GetShape();
+  //   }
+  // }
+  //
+  //
+  // auto rebin = ch::AutoRebin()
+  //   .SetBinThreshold(0.)
+  //   .SetBinUncertFraction(0.9)
+  //   .SetRebinMode(1)
+  //   .SetPerformRebin(true)
+  //   .SetVerbosity(1);
+  // if(auto_rebin) rebin.Rebin(cb, cb);
+  //
+  // vector<double> binning;
+  // if (highindep){
+  //   //Currently used: [0,400,450,500,550,625,700,800,900,1000,1100,1200,1300,1450,1600,1800,2000,2250,2500,2750,3000,3500]
+  //   binning = {0,400,450,500,550,625,700,800,900,1000,1100,1200,1300,1450,1600,1800,2000,2250,3500};
+  // }else{
+  //   //Currently used: [0,150,175,200,225,250,280,320,360,400,450,500,550,625,700,800,900,1000,1100,1200,1300,1450,1600,1800,2000,2250,2500,2750,3000,3500]
+  //   binning = {0,150,175,200,225,250,280,320,360,400,450,500,550,625,700,800,900,1000,1100,1200,1300,1450,1600,1800,2000,2250,3500};
+  // }
+  // if(manual_rebin) {
+  //   for(auto b : cb.cp().FilterAll(BinIsControlRegion).bin_set()) {
+  //     std::cout << "Rebinning by hand for bin: " << b <<  std::endl;
+  //     cb.cp().bin({b}).VariableRebin(binning);
+  //   }
+  // }
+  //
+  // if (check_neg_bins) {
+  //   for (auto b : bins) {
+  //     after_rebin[b] = cb.cp().bin({b}).backgrounds().GetShape();
+  //     // std::cout << "Bin: " << b << " (before)\n";
+  //     // before_rebin[b].Print("range");
+  //     // std::cout << "Bin: " << b << " (after)\n";
+  //     // after_rebin[b].Print("range");
+  //     // Build a sum-of-bkgs TH1 that doesn't truncate the negative yields
+  //     // like the CH GetShape does
+  //     for (auto p : cb.cp().bin({b}).backgrounds().process_set()) {
+  //       TH1F proc_hist;
+  //       cb.cp().bin({b}).process({p}).ForEachProc([&](ch::Process *proc) {
+  //         proc_hist = proc->ShapeAsTH1F();
+  //         proc_hist.Scale(proc->no_norm_rate());
+  //         for (int i = 1; i <= proc_hist.GetNbinsX(); ++i) {
+  //           if (proc_hist.GetBinContent(i) < 0.) {
+  //             std::cout << p << " bin " << i << ": " << proc_hist.GetBinContent(i) << "\n";
+  //           }
+  //         }
+  //       });
+  //       if (after_rebin_neg.count(b)) {
+  //         after_rebin_neg[b].Add(&proc_hist);
+  //       } else {
+  //         after_rebin_neg[b] = proc_hist;
+  //       }
+  //     }
+  //     std::cout << "Bin: " << b << "\n";
+  //     for (int i = 1; i <= after_rebin[b].GetNbinsX(); ++i) {
+  //       double offset = after_rebin[b].GetBinContent(i) - after_rebin_neg[b].GetBinContent(i);
+  //       double offset_by_yield = offset / after_rebin[b].GetBinContent(i);
+  //       double offset_by_err = offset / after_rebin[b].GetBinError(i);
+  //       printf("%-2i offset %-10.4f tot %-10.4f err %-10.4f off/tot %-10.4f off/err %-10.4f\n", i , offset, after_rebin[b].GetBinContent(i), after_rebin[b].GetBinError(i), offset_by_yield, offset_by_err);
+  //     }
+  //   }
+  // }
 
-
-  auto rebin = ch::AutoRebin()
-    .SetBinThreshold(0.)
-    .SetBinUncertFraction(0.9)
-    .SetRebinMode(1)
-    .SetPerformRebin(true)
-    .SetVerbosity(1);
-  if(auto_rebin) rebin.Rebin(cb, cb);
-
-  vector<double> binning;
-  if (highindep){
-    //Currently used: [0,400,450,500,550,625,700,800,900,1000,1100,1200,1300,1450,1600,1800,2000,2250,2500,2750,3000,3500]
-    binning = {0,400,450,500,550,625,700,800,900,1000,1100,1200,1300,1450,1600,1800,2000,2250,3500};
-  }else{
-    //Currently used: [0,150,175,200,225,250,280,320,360,400,450,500,550,625,700,800,900,1000,1100,1200,1300,1450,1600,1800,2000,2250,2500,2750,3000,3500]
-    binning = {0,150,175,200,225,250,280,320,360,400,450,500,550,625,700,800,900,1000,1100,1200,1300,1450,1600,1800,2000,2250,3500};
-  }
-  if(manual_rebin) {
-    for(auto b : cb.cp().FilterAll(BinIsControlRegion).bin_set()) {
-      std::cout << "Rebinning by hand for bin: " << b <<  std::endl;
-      cb.cp().bin({b}).VariableRebin(binning);
-    }
-  }
-
-  if (check_neg_bins) {
-    for (auto b : bins) {
-      after_rebin[b] = cb.cp().bin({b}).backgrounds().GetShape();
-      // std::cout << "Bin: " << b << " (before)\n";
-      // before_rebin[b].Print("range");
-      // std::cout << "Bin: " << b << " (after)\n";
-      // after_rebin[b].Print("range");
-      // Build a sum-of-bkgs TH1 that doesn't truncate the negative yields
-      // like the CH GetShape does
-      for (auto p : cb.cp().bin({b}).backgrounds().process_set()) {
-        TH1F proc_hist;
-        cb.cp().bin({b}).process({p}).ForEachProc([&](ch::Process *proc) {
-          proc_hist = proc->ShapeAsTH1F();
-          proc_hist.Scale(proc->no_norm_rate());
-          for (int i = 1; i <= proc_hist.GetNbinsX(); ++i) {
-            if (proc_hist.GetBinContent(i) < 0.) {
-              std::cout << p << " bin " << i << ": " << proc_hist.GetBinContent(i) << "\n";
-            }
-          }
-        });
-        if (after_rebin_neg.count(b)) {
-          after_rebin_neg[b].Add(&proc_hist);
-        } else {
-          after_rebin_neg[b] = proc_hist;
-        }
-      }
-      std::cout << "Bin: " << b << "\n";
-      for (int i = 1; i <= after_rebin[b].GetNbinsX(); ++i) {
-        double offset = after_rebin[b].GetBinContent(i) - after_rebin_neg[b].GetBinContent(i);
-        double offset_by_yield = offset / after_rebin[b].GetBinContent(i);
-        double offset_by_err = offset / after_rebin[b].GetBinError(i);
-        printf("%-2i offset %-10.4f tot %-10.4f err %-10.4f off/tot %-10.4f off/err %-10.4f\n", i , offset, after_rebin[b].GetBinContent(i), after_rebin[b].GetBinError(i), offset_by_yield, offset_by_err);
-      }
-    }
-  }
 
   // Uncomment this to inject 1 obs event in the last bin of every signal-region
   // category
@@ -819,15 +612,15 @@ if (do_bbb){
                 }), cb);
   }
   // And now do bbb for the control region with a slightly different config:
-  //auto bbb_ctl = ch::BinByBinFactory()
-  //  .SetPattern("CMS_$ANALYSIS_$BIN_$ERA_$PROCESS_bin_$#")
-  //  .SetAddThreshold(0.)
-  //  .SetMergeThreshold(0.4)
-  //  .SetFixNorm(false)  // contrary to signal region, bbb *should* change yield here
-  //  .SetVerbosity(1);
+  auto bbb_ctl = ch::BinByBinFactory()
+   .SetPattern("CMS_$ANALYSIS_$BIN_$ERA_$PROCESS_bin_$#")
+   .SetAddThreshold(0.)
+   .SetMergeThreshold(0.4)
+   .SetFixNorm(false)  // contrary to signal region, bbb *should* change yield here
+   .SetVerbosity(1);
   // Will merge but only for non W and QCD processes, to be on the safe side
-  //bbb_ctl.MergeBinErrors(cb.cp().process({"DY", "top"}, false).backgrounds().FilterProcs(BinIsNotControlRegion));
-  //bbb_ctl.AddBinByBin(cb.cp().process({"DY", "top"}, false).backgrounds().FilterProcs(BinIsNotControlRegion), cb); // Added .backgrounds() here when not removing signal from CR
+  bbb_ctl.MergeBinErrors(cb.cp().process({"Wjets", "top"}, false).backgrounds().FilterProcs(BinIsNotControlRegion));
+  bbb_ctl.AddBinByBin(cb.cp().process({"Wjets", "top"}, false).backgrounds().FilterProcs(BinIsNotControlRegion), cb); // Added .backgrounds() here when not removing signal from CR
   cout << " done\n";
 }
 
@@ -879,9 +672,6 @@ if (do_bbb){
  //note that it's also possible to write out the full combined card with CH <- this TODO
   string output_prefix = "output/";
   string root_suffix = "";
-  if (do2016){root_suffix = root_suffix + "16";}
-  if (do2017){root_suffix = root_suffix + "17";}
-  if (do2018){root_suffix = root_suffix + "18";}
   if (do2016semi){root_suffix = root_suffix + "semi16";}
   if (do2017semi){root_suffix = root_suffix + "semi17";}
   if (do2018semi){root_suffix = root_suffix + "semi18";}
@@ -922,14 +712,8 @@ if (do_bbb){
       writercmb.WriteCards("hww_"+chn+"_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({chn},"decay"));
     }
     // Add per category
-    //writer.WriteCards("hww_0jet_13TeV", cb.cp().attr({"0j"},"njet"));
-    //writer.WriteCards("hww_1jet_13TeV", cb.cp().attr({"1j"},"njet"));
-    //writer.WriteCards("hww_2jet_13TeV", cb.cp().attr({"2j"},"njet"));
     writer.WriteCards("hww_ggF_13TeV", cb.cp().attr({"ggh"},"njet"));
     writer.WriteCards("hww_VBF_13TeV", cb.cp().attr({"vbf"},"njet"));
-    //writercmb.WriteCards("hww_0jet_13TeV", cb.cp().attr({"0j"},"njet"));
-    //writercmb.WriteCards("hww_1jet_13TeV", cb.cp().attr({"1j"},"njet"));
-    //writercmb.WriteCards("hww_2jet_13TeV", cb.cp().attr({"2j"},"njet"));
     writercmb.WriteCards("hww_ggF_13TeV", cb.cp().attr({"ggh"},"njet"));
     writercmb.WriteCards("hww_VBF_13TeV", cb.cp().attr({"vbf"},"njet"));
     // Add per year
@@ -940,18 +724,16 @@ if (do_bbb){
     writercmb.WriteCards("hww_2017_13TeV", cb.cp().attr({"2k17"},"year"));
     writercmb.WriteCards("hww_2016_13TeV", cb.cp().attr({"2k16"},"year"));
     // Add per analysis
-    writer.WriteCards("hww2l2nu_2018_13TeV", cb.cp().attr({"dilep"},"analysis"));
     writer.WriteCards("hwwlnuqq_13TeV", cb.cp().attr({"semilep"},"analysis"));
-    writercmb.WriteCards("hww2l2nu_13TeV", cb.cp().attr({"dilep"},"analysis"));
     writercmb.WriteCards("hwwlnuqq_13TeV", cb.cp().attr({"semilep"},"analysis"));
   }
 
   // NEED to split boosed/resolved too
   // bos+res is either full comb, or semilep only
   if (do2016semi or do2017semi or do2018semi){
-    writer.WriteCards("hww_boosted_13TeV", cb.cp().attr({"boosted"},"whad"));
+    // writer.WriteCards("hww_boosted_13TeV", cb.cp().attr({"boosted"},"whad"));
     writer.WriteCards("hww_resolved_13TeV", cb.cp().attr({"resolved"},"whad"));
-    writercmb.WriteCards("hww_boosted_13TeV", cb.cp().attr({"boosted"},"whad"));
+    // writercmb.WriteCards("hww_boosted_13TeV", cb.cp().attr({"boosted"},"whad"));
     writercmb.WriteCards("hww_resolved_13TeV", cb.cp().attr({"resolved"},"whad"));
   }
 

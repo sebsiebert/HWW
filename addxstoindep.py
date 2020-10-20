@@ -7,7 +7,7 @@ import numpy
 import os.path
 import os
 
-#folder = '2016_indepSM'
+#folder = '2017_indepSM'
 #OnlyMakeSMGraph = 0 # Set 0 only for indepSM
 #gghonly=0
 #vbfonly=0
@@ -20,14 +20,14 @@ print "Options:","OnlyMakeSMGraph =",OnlyMakeSMGraph,";","gghonly = ",gghonly,";
 
 
 def getXsec(mass,process):
-  
+
   #kp = float(model[1]+"."+model[2])*float(model[1]+"."+model[2])
   #brn = float((model[6]+"."+model[7]))
   #sf = kp*(1-brn)
 #  print "ewk singlet SF = ",sf
 
   if process=="ggH":
-   rootFile = ROOT.TFile("/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/Fall2017_102X_nAODv5_Full2017v6/MCl1loose2017v6__MCCorr2017v6__l2loose__l2tightOR2017v6/nanoLatino_GluGluHToWWTo2L2Nu_M"+str(mass)+"__part0.root", "read")
+   rootFile = ROOT.TFile("/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/Fall2017_102X_nAODv7_Full2017v7/MCl1loose2017v7__MCCorr2017v7__MCCombJJLNu2017/nanoLatino_GluGluHToWWToLNuQQ_M"+str(mass)+"__part0.root", "read")
    latino = rootFile.Get("Events")
    latino.GetEntry(0)
    xsec = latino.Xsec
@@ -38,7 +38,7 @@ def getXsec(mass,process):
    return xsec
 
   elif process=="VBF":
-   rootFile = ROOT.TFile("/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/Fall2017_102X_nAODv5_Full2017v6/MCl1loose2017v6__MCCorr2017v6__l2loose__l2tightOR2017v6/nanoLatino_VBFHToWWTo2L2Nu_M"+str(mass)+"__part0.root", "read")
+   rootFile = ROOT.TFile("/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/Fall2017_102X_nAODv7_Full2017v7/MCl1loose2017v7__MCCorr2017v7__MCCombJJLNu2017/nanoLatino_VBFHToWWToLNuQQ_M"+str(mass)+"__part0.root", "read")
    latino = rootFile.Get("Events")
    latino.GetEntry(0)
    xsec = latino.Xsec
@@ -56,13 +56,14 @@ def RedoLists(masses, process):
   return xlist
 
 
-if not os.path.isfile('/afs/cern.ch/work/d/dmroy/CMSSW_10_2_13/src/CombineHarvester/MSSMFull2016/'+folder+'/indep.json'):
+
+if not os.path.isfile('/afs/cern.ch/work/s/ssiebert/CMSSW_10_2_13/src/CombineHarvester/'+folder+'/indep.json'):
   os.system('pushd '+folder+' ; combineTool.py -M CollectLimits -i higgsCombine.Test.Asymptotic*.root -o indep.json ; popd')
 
-file = open('/afs/cern.ch/work/d/dmroy/CMSSW_10_2_13/src/CombineHarvester/MSSMFull2016/'+folder+'/indep.json')
+file = open('/afs/cern.ch/work/s/ssiebert/CMSSW_10_2_13/src/CombineHarvester/'+folder+'/indep.json')
 json_data = json.load(file)
 file.close()
-file = open('/afs/cern.ch/work/d/dmroy/CMSSW_10_2_13/src/CombineHarvester/MSSMFull2016/'+folder+'/indep.json')
+file = open('/afs/cern.ch/work/s/ssiebert/CMSSW_10_2_13/src/CombineHarvester/'+folder+'/indep.json')
 json_data_SM = json.load(file)
 file.close()
 
@@ -224,14 +225,14 @@ for mass in removethese:
   json_data.pop(mass, None)
   json_data_SM.pop(mass, None)
 
-#with ('/afs/cern.ch/work/d/dmroy/CMSSW_7_4_7/src/CombineHarvester/HIG16006/output/indep.json', 'w') as file:
+#with ('/afs/cern.ch/work/s/ssiebert/CMSSW_7_4_7/src/CombineHarvester/HIG16006/output/indep.json', 'w') as file:
 #if not OnlyMakeSMGraph:
-file = open('/afs/cern.ch/work/d/dmroy/CMSSW_10_2_13/src/CombineHarvester/MSSMFull2016/'+folder+'/indep.json','w')
+file = open('/afs/cern.ch/work/s/ssiebert/CMSSW_10_2_13/src/CombineHarvester/'+folder+'/indep.json','w')
 json.dump(json_data, file)
 file.close()
-fileSM = open('/afs/cern.ch/work/d/dmroy/CMSSW_10_2_13/src/CombineHarvester/MSSMFull2016/'+folder+'/indepSM.json','w')
-json.dump(json_data_SM, fileSM)
-fileSM.close()
+# fileSM = open('/afs/cern.ch/work/s/ssiebert/CMSSW_10_2_13/src/CombineHarvester/'+folder+'/indepSM.json','w')
+# json.dump(json_data_SM, fileSM)
+# fileSM.close()
 
 print "Done!"
 exit(0)
