@@ -155,12 +155,12 @@ int main(int argc, char** argv) {
     input_dir["mqq6"]        = input_dir["eqq6"];
     input_dir["mqq6_top"]    = input_dir["eqq6"];
     input_dir["mqq6_wj"]     = input_dir["eqq6"];
-    // input_dir["eqq6_bs"]     = shapedir+"Full2016_v7/rootFile/plots_hm_boost_2016_v7.root";
-    // input_dir["eqq6_top_bs"] = input_dir["eqq6_bs"];
-    // input_dir["eqq6_wj_bs"]  = input_dir["eqq6_bs"];
-    // input_dir["mqq6_bs"]     = input_dir["eqq6_bs"];
-    // input_dir["mqq6_top_bs"] = input_dir["eqq6_bs"];
-    // input_dir["mqq6_wj_bs"]  = input_dir["eqq6_bs"];
+    input_dir["eqq6_bs"]     = shapedir+"Full2016_v7/rootFile/plots_hm_boost_2016_v7.root";
+    input_dir["eqq6_top_bs"] = input_dir["eqq6_bs"];
+    input_dir["eqq6_wj_bs"]  = input_dir["eqq6_bs"];
+    input_dir["mqq6_bs"]     = input_dir["eqq6_bs"];
+    input_dir["mqq6_top_bs"] = input_dir["eqq6_bs"];
+    input_dir["mqq6_wj_bs"]  = input_dir["eqq6_bs"];
   }
   if (do2017semi){
     input_dir["eqq7"]        = shapedir+"Full2017_v7/rootFile/plots_hm_resolv_2017_v7.root";
@@ -248,30 +248,30 @@ int main(int argc, char** argv) {
     {12, "MuCh_GGF_ResolvedSB_"},
     {13, "MuCh_VBF_ResolvedSB_"},
     };
-  // cats["eqq"+year+"_bs_13TeV"] = {
-  //   {6, "ElCh_GGF_BoostedSR_"},
-  //   {7, "ElCh_VBF_BoostedSR_"},
-  //   };
-  // cats["eqq"+year+"_top_bs_13TeV"] = {
-  //   {10, "ElCh_GGF_oostedTopCR_"},
-  //   {11, "ElCh_VBF_BoostedTopCR_"},
-  //   };
-  // cats["eqq"+year+"_wj_bs_13TeV"] = {
-  //   {12, "ElCh_GGF_BoostedSB_"},
-  //   {13, "ElCh_VBF_BoostedSB_"},
-  //   };
-  // cats["mqq"+year+"_bs_13TeV"] = {
-  //   {6, "MuCh_GGF_BoostedSR_"},
-  //   {7, "MuCh_VBF_BoostedSR_"},
-  //   };
-  // cats["mqq"+year+"_top_bs_13TeV"] = {
-  //   {10, "MuCh_GGF_BoostedTopCR_"},
-  //   {11, "MuCh_VBF_BoostedTopCR_"},
-  //   };
-  // cats["mqq"+year+"_wj_bs_13TeV"] = {
-  //   {12, "MuCh_GGF_BoostedSB_"},
-  //   {13, "MuCh_VBF_BoostedSB_"},
-  //   };
+  cats["eqq"+year+"_bs_13TeV"] = {
+    {6, "ElCh_GGF_BoostedSR_"},
+    {7, "ElCh_VBF_BoostedSR_"},
+    };
+  cats["eqq"+year+"_top_bs_13TeV"] = {
+    {10, "ElCh_GGF_BoostedTopCR_"},
+    {11, "ElCh_VBF_BoostedTopCR_"},
+    };
+  cats["eqq"+year+"_wj_bs_13TeV"] = {
+    {12, "ElCh_GGF_BoostedSB_"},
+    {13, "ElCh_VBF_BoostedSB_"},
+    };
+  cats["mqq"+year+"_bs_13TeV"] = {
+    {6, "MuCh_GGF_BoostedSR_"},
+    {7, "MuCh_VBF_BoostedSR_"},
+    };
+  cats["mqq"+year+"_top_bs_13TeV"] = {
+    {10, "MuCh_GGF_BoostedTopCR_"},
+    {11, "MuCh_VBF_BoostedTopCR_"},
+    };
+  cats["mqq"+year+"_wj_bs_13TeV"] = {
+    {12, "MuCh_GGF_BoostedSB_"},
+    {13, "MuCh_VBF_BoostedSB_"},
+    };
 
   }
 
@@ -282,7 +282,6 @@ int main(int argc, char** argv) {
       masses[it.first] = {"400", "450", "500", "550", "600", "650", "700", "750", "800", "900", "1000", "1500", "2000", "2500", "3000", "4000", "5000"};
     }else if(it.first.find("qq") != std::string::npos && it.first.find("bs") == std::string::npos){ //Semilep resolved
       masses[it.first] = {"115", "120", "124", "125", "126", "130", "135", "140", "145", "150", "155", "160", "165", "170", "175", "180", "190", "200", "210", "230", "250", "270", "300", "350", "400", "450", "500", "550", "600"};
-      masses[it.first] = {"115", "120", "124", "125", "126", "130", "135", "140", "145", "150", "155", "160", "165", "170", "175", "180", "190", "200", "210", "230", "250", "270", "300", "350", "400", "450", "500", "550", "600", "650", "700", "750", "800", "900", "1000", "1500", "2000", "2500", "3000", "4000", "5000"};
     }
   }
 
@@ -318,7 +317,7 @@ int main(int argc, char** argv) {
   if(chn.find("qq") != std::string::npos){    //Semilep
 
     std::string discrim = "resolvHiggsMass";
-    if (chn.find("bs") != std::string::npos) discrim = "boostHiggsMass";
+    if (chn.find("bs") != std::string::npos) discrim = "boostHiggsMass_vbf";
     if (chn.find("top") != std::string::npos || chn.find("wj") != std::string::npos) discrim = "events";
 
     cb.cp().channel({chn}).backgrounds().ExtractShapes(
@@ -656,7 +655,7 @@ if (do_bbb){
       for (auto p : procs) {
         std::cout << "Process:" << p << "\n";
         ch::BuildRooMorphing(ws, cb, b, p, *(mass_var[p]),
-                             "norm", true, false, false, &demo); // Middle bool is verbose
+                             "norm", true, true, false, &demo); // Middle bool is verbose
       }
     }
   }
@@ -731,9 +730,9 @@ if (do_bbb){
   // NEED to split boosed/resolved too
   // bos+res is either full comb, or semilep only
   if (do2016semi or do2017semi or do2018semi){
-    // writer.WriteCards("hww_boosted_13TeV", cb.cp().attr({"boosted"},"whad"));
+    writer.WriteCards("hww_boosted_13TeV", cb.cp().attr({"boosted"},"whad"));
     writer.WriteCards("hww_resolved_13TeV", cb.cp().attr({"resolved"},"whad"));
-    // writercmb.WriteCards("hww_boosted_13TeV", cb.cp().attr({"boosted"},"whad"));
+    writercmb.WriteCards("hww_boosted_13TeV", cb.cp().attr({"boosted"},"whad"));
     writercmb.WriteCards("hww_resolved_13TeV", cb.cp().attr({"resolved"},"whad"));
   }
 
