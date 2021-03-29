@@ -1,4 +1,4 @@
-Setup for running high mass semileptonic HWW limits.
+Setup for running high mass semileptonic HWW limits. This repo has to be cloned into the CombineHarvester folder.
 
 The script `makeLimits.py` prepares all the needed commands for morphing, datacards, workspaces, and running the limits.
 The option -dryrun allows for testing, the script will then only print the commands without running them.
