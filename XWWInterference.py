@@ -205,6 +205,14 @@ class XWWInterference(PhysicsModel):
             self.modelBuilder.factory_("expr::SBI_SCALE_ggH(\"TMath::Sqrt(@0/@1)*@1\", rgg,xsec_ggH)")
             self.modelBuilder.factory_("expr::SBI_SCALE_qqH(\"TMath::Sqrt(@0/@1)*@1\", rqq,xsec_qqH)")
 
+
+            self.modelBuilder.factory_("expr::S_SCALE_ggH2(\"@0*{0} - TMath::Sqrt(@0/@1)*@1*{0}\", rgg,xsec_ggH)".format(self.BRlnuqq/self.BR2l2nu))
+            self.modelBuilder.factory_("expr::S_SCALE_qqH2(\"@0*{0} - TMath::Sqrt(@0/@1)*@1*{0}\", rqq,xsec_qqH)".format(self.BRlnuqq/self.BR2l2nu))
+            self.modelBuilder.factory_("expr::B_SCALE_ggH2(\"1.-TMath::Sqrt(@0/@1)*@1*{0}\", rgg,xsec_ggH)".format(self.BRlnuqq/self.BR2l2nu))
+            self.modelBuilder.factory_("expr::B_SCALE_qqH2(\"1.-TMath::Sqrt(@0/@1)*@1*{0}\", rqq,xsec_qqH)".format(self.BRlnuqq/self.BR2l2nu))
+            self.modelBuilder.factory_("expr::SBI_SCALE_ggH2(\"TMath::Sqrt(@0/@1)*@1*{0}\", rgg,xsec_ggH)".format(self.BRlnuqq/self.BR2l2nu))
+            self.modelBuilder.factory_("expr::SBI_SCALE_qqH2(\"TMath::Sqrt(@0/@1)*@1*{0}\", rqq,xsec_qqH)".format(self.BRlnuqq/self.BR2l2nu))
+
             # Old: For self.NoSMXsecAdded == False
             #self.modelBuilder.factory_("expr::rgg(\"(1.-@1)*@0/@2\", sigma,fvbf,xsec_ggH)")
             #self.modelBuilder.factory_("expr::rqq(\"@1*@0/@2\", sigma,fvbf,xsec_qqH)")
@@ -235,15 +243,15 @@ class XWWInterference(PhysicsModel):
         self.modelBuilder.out.function('B_SCALE_qqH').Print('')
         self.modelBuilder.out.function('SBI_SCALE_ggH').Print('')
         self.modelBuilder.out.function('SBI_SCALE_qqH').Print('')
-        #if self.muAsPOI and self.NoSMXsecAdded:
-        #  self.modelBuilder.out.function('rgg2').Print('')
-        #  self.modelBuilder.out.function('rqq2').Print('')
-        #  self.modelBuilder.out.function('S_SCALE_ggH2').Print('')
-        #  self.modelBuilder.out.function('S_SCALE_qqH2').Print('')
-        #  self.modelBuilder.out.function('B_SCALE_ggH2').Print('')
-        #  self.modelBuilder.out.function('B_SCALE_qqH2').Print('')
-        #  self.modelBuilder.out.function('SBI_SCALE_ggH2').Print('')
-        #  self.modelBuilder.out.function('SBI_SCALE_qqH2').Print('')
+        # if self.NoSMXsecAdded:
+        self.modelBuilder.out.function('rgg2').Print('')
+        self.modelBuilder.out.function('rqq2').Print('')
+        self.modelBuilder.out.function('S_SCALE_ggH2').Print('')
+        self.modelBuilder.out.function('S_SCALE_qqH2').Print('')
+        self.modelBuilder.out.function('B_SCALE_ggH2').Print('')
+        self.modelBuilder.out.function('B_SCALE_qqH2').Print('')
+        self.modelBuilder.out.function('SBI_SCALE_ggH2').Print('')
+        self.modelBuilder.out.function('SBI_SCALE_qqH2').Print('')
 
         self.modelBuilder.doSet("POI",poi)
 

@@ -17,7 +17,7 @@ using ch::syst::mass;
 using ch::syst::bin;
 using ch::JoinStr;
 
-void AddMSSMFullRun2Systematics(CombineHarvester & cb, bool highmass, bool DNNdiscrim, std::string model) {
+void AddMSSMFullRun2Systematics(CombineHarvester & cb, bool highmass, std::string model) {
     // Create a CombineHarvester clone that only contains the signal
     // categories
     CombineHarvester cb_sig = cb.cp();
@@ -29,18 +29,7 @@ void AddMSSMFullRun2Systematics(CombineHarvester & cb, bool highmass, bool DNNdi
 
     std::vector<std::string> runyears = {"6", "7", "8"};
 
-    //cb.cp().bin_id({6,10,14}).ForEachObj([&](ch::Object *obj){
-    //    obj->set_attribute("njet","0j");
-    //});
-    //cb.cp().bin_id({7,11,15}).ForEachObj([&](ch::Object *obj){
-    //    obj->set_attribute("njet","1j");
-    //});
-    //cb.cp().bin_id({8,12,16}).ForEachObj([&](ch::Object *obj){
-    //    obj->set_attribute("njet","2j");
-    //});
-    //cb.cp().bin_id({9,13,17}).ForEachObj([&](ch::Object *obj){
-    //    obj->set_attribute("njet","vbf");
-    //});
+
     cb.cp().bin_id({6,10,12}).ForEachObj([&](ch::Object *obj){
         obj->set_attribute("njet","ggh");
     });
@@ -48,45 +37,99 @@ void AddMSSMFullRun2Systematics(CombineHarvester & cb, bool highmass, bool DNNdi
         obj->set_attribute("njet","vbf");
     });
 
-    cb.cp().channel({"em8","em8_dy","em8_top", "em7","em7_dy","em7_top", "em6","em6_dy","em6_top"}).ForEachObj([&](ch::Object *obj){
-        obj->set_attribute("decay","em");
-    });
-    cb.cp().channel({"ee8","ee8_dy","ee8_top", "ee7","ee7_dy","ee7_top", "ee6","ee6_dy","ee6_top"}).ForEachObj([&](ch::Object *obj){
-        obj->set_attribute("decay","ee");
-    });
-    cb.cp().channel({"mm8","mm8_dy","mm8_top", "mm7","mm7_dy","mm7_top", "mm6","mm6_dy","mm6_top"}).ForEachObj([&](ch::Object *obj){
-        obj->set_attribute("decay","mm");
+    cb.cp().channel({"eqq8","eqq8_top","eqq8_wj","eqq8_bs","eqq8_top_bs","eqq8_wj_bs",
+                    "eqq7","eqq7_top","eqq7_wj","eqq7_bs","eqq7_top_bs","eqq7_wj_bs",
+                    "eqq6","eqq6_top","eqq6_wj","eqq6_bs","eqq6_top_bs","eqq6_wj_bs",
+
+                    "eqq8_hm","eqq8_top_hm","eqq8_wj_hm",
+                    "eqq7_hm","eqq7_top_hm","eqq7_wj_hm",
+                    "eqq6_hm","eqq6_top_hm","eqq6_wj_hm",
+            }).ForEachObj([&](ch::Object *obj){
+            obj->set_attribute("decay","eqq");
     });
 
-    cb.cp().channel({"em8","em8_dy","em8_top", "ee8","ee8_dy","ee8_top", "mm8","mm8_dy","mm8_top"}).ForEachObj([&](ch::Object *obj){
+    cb.cp().channel({"mqq8","mqq8_top","mqq8_wj","mqq8_bs","mqq8_top_bs","mqq8_wj_bs",
+                    "mqq7","mqq7_top","mqq7_wj","mqq7_bs","mqq7_top_bs","mqq7_wj_bs",
+                    "mqq6","mqq6_top","mqq6_wj","mqq6_bs","mqq6_top_bs","mqq6_wj_bs",
+
+                    "mqq8_hm","mqq8_top_hm","mqq8_wj_hm",
+                    "mqq7_hm","mqq7_top_hm","mqq7_wj_hm",
+                    "mqq6_hm","mqq6_top_hm","mqq6_wj_hm",
+            }).ForEachObj([&](ch::Object *obj){
+            obj->set_attribute("decay","mqq");
+    });
+
+    cb.cp().channel({"eqq8","eqq8_top","eqq8_wj","eqq8_bs","eqq8_top_bs","eqq8_wj_bs",
+                    "mqq8","mqq8_top","mqq8_wj","mqq8_bs","mqq8_top_bs","mqq8_wj_bs",
+
+                    "eqq8_hm","mqq8_hm","eqq8_top_hm","eqq8_wj_hm","mqq8_top_hm","mqq8_wj_hm"
+        }).ForEachObj([&](ch::Object *obj){
         obj->set_attribute("year","2k18");
     });
-    cb.cp().channel({"em7","em7_dy","em7_top", "ee7","ee7_dy","ee7_top", "mm7","mm7_dy","mm7_top"}).ForEachObj([&](ch::Object *obj){
+    cb.cp().channel({"eqq7","eqq7_top","eqq7_wj","eqq7_bs","eqq7_top_bs","eqq7_wj_bs",
+                    "mqq7","mqq7_top","mqq7_wj","mqq7_bs","mqq7_top_bs","mqq7_wj_bs",
+
+                    "eqq7_hm","mqq7_hm","eqq7_top_hm","eqq7_wj_hm","mqq7_top_hm","mqq7_wj_hm"
+        }).ForEachObj([&](ch::Object *obj){
         obj->set_attribute("year","2k17");
     });
-    cb.cp().channel({"em6","em6_dy","em6_top", "ee6","ee6_dy","ee6_top", "mm6","mm6_dy","mm6_top"}).ForEachObj([&](ch::Object *obj){
+    cb.cp().channel({"eqq6","eqq6_top","eqq6_wj", "eqq6_bs","eqq6_top_bs","eqq6_wj_bs",
+                    "mqq6","mqq6_top","mqq6_wj","mqq6_bs","mqq6_top_bs","mqq6_wj_bs",
+
+                    "eqq6_hm","mqq6_hm","eqq6_top_hm","eqq6_wj_hm","mqq6_top_hm","mqq6_wj_hm"
+        }).ForEachObj([&](ch::Object *obj){
         obj->set_attribute("year","2k16");
     });
 
-    cb.cp().channel({"em8","ee8","mm8", "em7","ee7","mm7", "em6","ee6","mm6"}).ForEachObj([&](ch::Object *obj){
+    cb.cp().channel({"eqq8","mqq8","eqq8_bs","mqq8_bs",
+                    "eqq7","mqq7","eqq7_bs","mqq7_bs",
+                    "eqq6","mqq6","eqq6_bs","mqq6_bs",
+
+                    "eqq8_hm","mqq8_hm","eqq7_hm","mqq7_hm","eqq6_hm","mqq6_hm"
+        }).ForEachObj([&](ch::Object *obj){
         obj->set_attribute("CR","False");
     });
-    cb.cp().channel({"em8_dy","em8_top","ee8_dy","ee8_top","mm8_dy","mm8_top", "em7_dy","em7_top","ee7_dy","ee7_top","mm7_dy","mm7_top", "em6_dy","em6_top","ee6_dy","ee6_top","mm6_dy","mm6_top"}).ForEachObj([&](ch::Object *obj){
+    cb.cp().channel({
+        "eqq8_top","mqq8_top","eqq8_top_bs","mqq8_top_bs",
+        "eqq8_wj","mqq8_wj","eqq8_wj_bs","mqq8_wj_bs",
+        "eqq8_top_hm","eqq8_wj_hm","mqq8_top_hm","mqq8_wj_hm"
+        
+        "eqq7_top","mqq7_top","eqq7_top_bs","mqq7_top_bs",
+        "eqq7_wj","mqq7_wj","eqq7_wj_bs","mqq7_wj_bs",
+        "eqq7_top_hm","eqq7_wj_hm","mqq7_top_hm","mqq7_wj_hm"
+        
+        "eqq6_top","mqq6_top","eqq6_top_bs","mqq6_top_bs",
+        "eqq6_wj","mqq6_wj","eqq6_wj_bs","mqq6_wj_bs",
+        "eqq6_top_hm","eqq6_wj_hm","mqq6_top_hm","mqq6_wj_hm"
+        }).ForEachObj([&](ch::Object *obj){
         obj->set_attribute("CR","True");
     });
 
-    cb.cp().channel({"em6","em6_dy","em6_top", "ee6","ee6_dy","ee6_top", "mm6","mm6_dy","mm6_top", "em7","em7_dy","em7_top", "ee7","ee7_dy","ee7_top", "mm7","mm7_dy","mm7_top", "em8","em8_dy","em8_top", "ee8","ee8_dy","ee8_top", "mm8","mm8_dy","mm8_top"}).ForEachObj([&](ch::Object *obj){
-        obj->set_attribute("analysis","dilep");
-    });
-    cb.cp().channel({"eqq6","eqq6_dy","eqq6_wj", "mqq6","mqq6_dy","mqq6_wj", "mqq6_bs","mqq6_dy_bs","mqq6_wj_bs", "mqq6_bs","mqq6_dy_bs","mqq6_wj_bs", "eqq7","eqq7_dy","eqq7_wj", "mqq7","mqq7_dy","mqq7_wj", "mqq7_bs","mqq7_dy_bs","mqq7_wj_bs", "mqq7_bs","mqq7_dy_bs","mqq7_wj_bs", "eqq8","eqq8_dy","eqq8_wj", "mqq8","mqq8_dy","mqq8_wj", "mqq8_bs","mqq8_dy_bs","mqq8_wj_bs", "mqq8_bs","mqq8_dy_bs","mqq8_wj_bs"}).ForEachObj([&](ch::Object *obj){
+    cb.cp().channel({
+        "eqq6","eqq6_dy","eqq6_wj", "mqq6","mqq6_dy","mqq6_wj",
+        "mqq6_bs","mqq6_dy_bs","mqq6_wj_bs", "mqq6_bs","mqq6_dy_bs","mqq6_wj_bs",
+        "eqq6_hm","eqq6_top_hm","eqq6_wj_hm", "mqq6_hm","mqq6_top_hm","mqq6_wj_hm",
+        
+        "eqq7","eqq7_dy","eqq7_wj", "mqq7","mqq7_dy","mqq7_wj",
+        "mqq7_bs","mqq7_dy_bs","mqq7_wj_bs", "mqq7_bs","mqq7_dy_bs","mqq7_wj_bs",
+        "eqq7_hm","eqq7_top_hm","eqq7_wj_hm", "mqq7_hm","mqq7_top_hm","mqq7_wj_hm",
+        
+        "eqq8","eqq8_dy","eqq8_wj", "mqq8","mqq8_dy","mqq8_wj",
+        "mqq8_bs","mqq8_dy_bs","mqq8_wj_bs", "mqq8_bs","mqq8_dy_bs","mqq8_wj_bs",
+        "eqq8_hm","eqq8_top_hm","eqq8_wj_hm", "mqq8_hm","mqq8_top_hm","mqq8_wj_hm"
+        }).ForEachObj([&](ch::Object *obj){
         obj->set_attribute("analysis","semilep");
     });
 
     cb.cp().channel({"eqq6_bs","eqq6_top_bs","eqq6_wj_bs", "mqq6_bs","mqq6_top_bs","mqq6_wj_bs", "eqq7_bs","eqq7_top_bs","eqq7_wj_bs", "mqq7_bs","mqq7_top_bs","mqq7_wj_bs", "eqq8_bs","eqq8_top_bs","eqq8_wj_bs", "mqq8_bs","mqq8_top_bs","mqq8_wj_bs"}).ForEachObj([&](ch::Object *obj){
-        obj->set_attribute("whad","boosted");
+        obj->set_attribute("whad","Boosted");
     });
     cb.cp().channel({"eqq6","eqq6_top","eqq6_wj", "mqq6","mqq6_top","mqq6_wj", "eqq7","eqq7_top","eqq7_wj", "mqq7","mqq7_top","mqq7_wj", "eqq8","eqq8_top","eqq8_wj", "mqq8","mqq8_top","mqq8_wj"}).ForEachObj([&](ch::Object *obj){
-        obj->set_attribute("whad","resolved");
+        obj->set_attribute("whad","Resolved");
+    });
+
+    cb.cp().channel({"eqq6_hm","eqq6_top_hm","eqq6_wj_hm", "mqq6_hm","mqq6_top_hm","mqq6_wj_hm", "eqq7_hm","eqq7_top_hm","eqq7_wj_hm", "mqq7_hm","mqq7_top_hm","mqq7_wj_hm", "eqq8_hm","eqq8_top_hm","eqq8_wj_hm", "mqq8_hm","mqq8_top_hm","mqq8_wj_hm"}).ForEachObj([&](ch::Object *obj){
+        obj->set_attribute("whad","HM");
     });
 
 
@@ -124,10 +167,16 @@ void AddMSSMFullRun2Systematics(CombineHarvester & cb, bool highmass, bool DNNdi
     cb.cp().process({"VZ"}).attr({"semilep"},"analysis")
         .AddSyst(cb, "QCDscale_VV", "lnN", SystMapAsymm<>::init(0.99, 1.01)); // LHEScaleWeight missing in inclusive samples, initialize with 1% lnN
 
-    cb.cp().process({"DY"}).AddSyst(cb, "QCDscale_V", "shape", SystMap<>::init(1.00));
-    cb.cp().process({"Vg", "VgS_H", "VgS_L", "WW2J"})
-        .AddSyst(cb, "QCDscale_VV", "shape", SystMap<>::init(1.00)); // In semilep not to VZ, LHEScaleWeight missing in VZ Semilep? Check2016
-    cb.cp().process({"top"}).AddSyst(cb, "QCDscale_ttbar", "shape", SystMap<>::init(1.00));
+    // cb.cp().process({"DY"}).AddSyst(cb, "QCDscale_V", "shape", SystMap<>::init(1.00));
+    // cb.cp().process({"Vg", "VgS_H", "VgS_L"})
+    //     .AddSyst(cb, "QCDscale_VV", "shape", SystMap<>::init(1.00)); // In semilep not to VZ, LHEScaleWeight missing in VZ Semilep? Check2016
+    // FIXME: nuisance name in 2016 is different than 2017/18
+    // cb.cp().process({"WW2J", "qqWWqq"}).attr({"2k17", "2k18"}, "year")
+    //     .AddSyst(cb, "QCDscale_WWJJ", "shape", SystMap<>::init(1.00));
+    // cb.cp().process({"WW2J", "qqWWqq"}).attr({"2k16"}, "year")
+    //     .AddSyst(cb, "QCDscale_VV", "shape", SystMap<>::init(1.00));
+
+    // cb.cp().process({"top"}).AddSyst(cb, "QCDscale_ttbar", "shape", SystMap<>::init(1.00));
     cb.cp().process({"WWewk"}).AddSyst(cb, "QCDscale_VV", "lnN", SystMap<>::init(1.11));
 
     // TODO: fix: Semilep
@@ -137,8 +186,6 @@ void AddMSSMFullRun2Systematics(CombineHarvester & cb, bool highmass, bool DNNdi
         .AddSyst(cb, "QCDscale_ggVV", "shape", SystMap<>::init(1.00));
     cb.cp().process(JoinStr({qqH, qqHSBI, {"qqH_hww"}}))
         .AddSyst(cb, "QCDscale_qqH", "shape", SystMap<>::init(1.00));
-    cb.cp().process(JoinStr({qqHSBI, {"qqWWqq"}}))
-        .AddSyst(cb, "QCDscale_VV", "shape", SystMap<>::init(1.00));
 
 
     // QCD scale acceptance uncertainties
@@ -304,69 +351,73 @@ void AddMSSMFullRun2Systematics(CombineHarvester & cb, bool highmass, bool DNNdi
     // Electrons
     // -----------------------
     for(auto y : runyears){
-    cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi})).attr({"2k1"+y},"year").attr({"semilep"},"analysis").AddSyst(cb,
-        "CMS_eff_e_201"+y, "shape", SystMap<>::init(1.00));
-    //cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi})).attr({"2k1"+y},"year").attr({"semilep"},"analysis").AddSyst(cb,
-    //    "CMS_scale_e_201"+y, "shape", SystMap<>::init(1.00));
+    cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi})).attr({"2k1"+y},"year")
+        .attr({"semilep"},"analysis")
+        .AddSyst(cb, "CMS_eff_e_201"+y, "shape", SystMap<>::init(1.00));
+    cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi})).attr({"2k1"+y},"year")
+        .attr({"semilep"},"analysis")
+        .AddSyst(cb, "CMS_scale_e_201"+y, "shape", SystMap<>::init(1.00));
     }
 
 
     // Muons
     // -----------------------
     for(auto y : runyears){
-    cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi})).attr({"2k1"+y},"year").attr({"semilep"},"analysis").AddSyst(cb,
-        "CMS_eff_m_201"+y, "shape", SystMap<>::init(1.00));
-    //cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi})).attr({"2k1"+y},"year").attr({"semilep"},"analysis").AddSyst(cb,
-    //    "CMS_scale_m_201"+y, "shape", SystMap<>::init(1.00));
+    cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi})).attr({"2k1"+y},"year")
+        .attr({"semilep"},"analysis")
+        .AddSyst(cb, "CMS_eff_m_201"+y, "shape", SystMap<>::init(1.00));
+    cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi})).attr({"2k1"+y},"year")
+        .attr({"semilep"},"analysis")
+        .AddSyst(cb, "CMS_scale_m_201"+y, "shape", SystMap<>::init(1.00));
     }
 
 
-    // // Jets
-    // // -----------------------
-    // std::vector<std::string> jes_systs {
-    //     "JESAbsolute","JESBBEC1","JESEC2","JESFlavorQCD","JESHF","JESRelativeBal"
-    // };
-    // for(auto js : jes_systs) {
-    //     cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
-    //         .attr({"semilep"},"analysis")
-    //         .AddSyst(cb, "CMS_scale_"+js, "shape", SystMap<>::init(1.00));
-    // }
-    //
-    // std::vector<std::string> jes_systs_year {
-    //     "JESAbsolute_201","JESBBEC1_201","JESEC2_201","JESHF_201","JESRelativeSample_201"
-    // };
-    // for(auto y : runyears){
-    //     for(auto js : jes_systs_year) {
-    //         cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
-    //             .attr({"2k1"+y},"year").attr({"semilep"},"analysis")
-    //             .AddSyst(cb, "CMS_scale_"+js+y, "shape", SystMap<>::init(1.00));
-    //     }
-    // }
-    //
-    //
-    // // Fat Jets
-    // // -----------------------
-    // for(auto y : runyears){
-    //     cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
-    //         .attr({"2k1"+y},"year").attr({"semilep"},"analysis")
-    //         .AddSyst(cb, "CMS_scale_fatj_201"+y, "shape", SystMap<>::init(1.00));
-    //     cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
-    //         .attr({"2k1"+y},"year").attr({"semilep"},"analysis")
-    //         .AddSyst(cb, "CMS_res_fatjer_201"+y, "shape", SystMap<>::init(1.00));
-    //     cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
-    //         .attr({"2k1"+y},"year").attr({"semilep"},"analysis")
-    //         .AddSyst(cb, "CMS_fatjms_201"+y, "shape", SystMap<>::init(1.00));
-    //     cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
-    //         .attr({"2k1"+y},"year").attr({"semilep"},"analysis")
-    //         .AddSyst(cb, "CMS_res_fatjmr_201"+y, "shape", SystMap<>::init(1.00));
-    // }
+    // Jets
+    // -----------------------
+    std::vector<std::string> jes_systs {
+        "JESAbsolute","JESBBEC1","JESEC2","JESFlavorQCD","JESHF","JESRelativeBal"
+    };
+    for(auto js : jes_systs) {
+        cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
+            .attr({"semilep"},"analysis")
+            .AddSyst(cb, "CMS_scale_"+js, "shape", SystMap<>::init(1.00));
+    }
+    
+    std::vector<std::string> jes_systs_year {
+        "JESAbsolute_201","JESBBEC1_201","JESEC2_201","JESHF_201","JESRelativeSample_201"
+    };
+    for(auto y : runyears){
+        for(auto js : jes_systs_year) {
+            cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
+                .attr({"2k1"+y},"year").attr({"semilep"},"analysis")
+                .AddSyst(cb, "CMS_scale_"+js+y, "shape", SystMap<>::init(1.00));
+        }
+    }
+    
+    
+    // Fat Jets
+    // -----------------------
+    for(auto y : runyears){
+        cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
+            .attr({"2k1"+y},"year").attr({"semilep"},"analysis")
+            .AddSyst(cb, "CMS_scale_fatj_201"+y, "shape", SystMap<>::init(1.00));
+        cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
+            .attr({"2k1"+y},"year").attr({"semilep"},"analysis")
+            .AddSyst(cb, "CMS_res_fatjer_201"+y, "shape", SystMap<>::init(1.00));
+        cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
+            .attr({"2k1"+y},"year").attr({"semilep"},"analysis")
+            .AddSyst(cb, "CMS_fatjms_201"+y, "shape", SystMap<>::init(1.00));
+        cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
+            .attr({"2k1"+y},"year").attr({"semilep"},"analysis")
+            .AddSyst(cb, "CMS_res_fatjmr_201"+y, "shape", SystMap<>::init(1.00));
+    }
 
 
     // MET
     // -----------------------
     for(auto y : runyears){
-    //cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi})).attr({"2k1"+y},"year").attr({"semilep"},"analysis").AddSyst(cb,
-    //    "CMS_scale_met_201"+y, "shape", SystMap<>::init(1.00));
+    cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi})).attr({"2k1"+y},"year").attr({"semilep"},"analysis").AddSyst(cb,
+       "CMS_scale_met_201"+y, "shape", SystMap<>::init(1.00));
     }
 
     // Using lnN instead of shapes for signal region for the above 4 uncertainties:
@@ -405,9 +456,13 @@ void AddMSSMFullRun2Systematics(CombineHarvester & cb, bool highmass, bool DNNdi
 
     // W-tagging (tau21)
     // -----------------------
-    // cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
-    //     .AddSyst(cb, "CMS_wtag_eff", "shape", SystMap<>::init(1.00));
-    // TODO: add lnN for high mass category
+    cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
+        .attr({"Resolved", "Boosted"},"whad")
+        .AddSyst(cb, "CMS_wtag_eff", "shape", SystMap<>::init(1.00));
+    // add lnN for high mass category
+    cb.cp().process(JoinStr({signal, SM_procs, backgroundsSemi}))
+        .attr({"HM"},"whad")
+        .AddSyst(cb, "CMS_wtag_eff_HM", "lnN", SystMap<>::init(1.05));
 
 
     // Trigger
@@ -439,16 +494,16 @@ void AddMSSMFullRun2Systematics(CombineHarvester & cb, bool highmass, bool DNNdi
                                                 "qqWWqq", "WW2J", "top", "DY", "VVV", "VZ"}}))
         .attr({"semilep"},"analysis")
         .AddSyst(cb,"PS_ISR", "shape", SystMap<>::init(1.00));
-        
+
     cb.cp().process(JoinStr({signal, SM_procs, {"Wjets", "Vg", "VgS", "ggWW", "WW", "WWewk",
                                                 "qqWWqq", "WW2J", "top", "DY", "VVV"}})) //TODO: add VZ back
         .attr({"semilep"},"analysis")
         .AddSyst(cb,"PS_FSR", "shape", SystMap<>::init(1.00));
 
     cb.cp().process({"ggH_hww", "qqH_hww", "WW"}).attr({"2k18", "2k17"},"year")
-        .AddSyst(cb, "UE", "shape", SystMap<>::init(1.00));
+        .AddSyst(cb, "UE_CP5", "lnN", SystMap<>::init(1.015));
     cb.cp().process({"ggH_hww", "qqH_hww", "WW"}).attr({"2k16"},"year")
-        .AddSyst(cb, "UE_CUET", "shape", SystMap<>::init(1.00));
+        .AddSyst(cb, "UE_CUET", "lnN", SystMap<>::init(1.015));
 
 
     // Fakes
@@ -484,83 +539,89 @@ void AddMSSMFullRun2Systematics(CombineHarvester & cb, bool highmass, bool DNNdi
     // TODO:
     for(auto y : runyears){
         for(auto y2 : std::vector<std::string> {"e", "m"}){
-            for(auto y3 : std::vector<std::string> {"", "_bs"}){
-                cb.cp().process({"top"}).bin_id({6, 10, 14})
+            for(auto y3 : std::vector<std::string> {"", "_bs", "_hm"}){
+                cb.cp().process({"top"}).bin_id({6, 10, 12})
                 .channel({y2+"qq"+y+y3,y2+"qq"+y+"_wj"+y3,y2+"qq"+y+"_top"+y3})
                 .attr({"semilep"},"analysis")
                 .AddSyst(cb, "CMS_rateparam_TOP_"+y2+"qq"+y3+"_ggf_201"+y,
                     "rateParam", SystMap<>::init(1.00));
-                cb.cp().process({"top"}).bin_id({9, 13, 17})
+                cb.cp().process({"top"}).bin_id({7, 11, 13})
                 .channel({y2+"qq"+y+y3,y2+"qq"+y+"_wj"+y3,y2+"qq"+y+"_top"+y3})
                 .attr({"semilep"},"analysis")
                 .AddSyst(cb, "CMS_rateparam_TOP_"+y2+"qq"+y3+"_vbf_201"+y,
+                    "rateParam", SystMap<>::init(1.00));
+
+                cb.cp().process({"Wjets"}).bin_id({6, 10, 12})
+                .channel({y2+"qq"+y+y3,y2+"qq"+y+"_wj"+y3,y2+"qq"+y+"_top"+y3})
+                .attr({"semilep"},"analysis")
+                .AddSyst(cb, "CMS_rateparam_WJETS_"+y2+"qq"+y3+"_ggf_201"+y,
+                    "rateParam", SystMap<>::init(1.00));
+                cb.cp().process({"Wjets"}).bin_id({7, 11, 13})
+                .channel({y2+"qq"+y+y3,y2+"qq"+y+"_wj"+y3,y2+"qq"+y+"_top"+y3})
+                .attr({"semilep"},"analysis")
+                .AddSyst(cb, "CMS_rateparam_WJETS_"+y2+"qq"+y3+"_vbf_201"+y,
                     "rateParam", SystMap<>::init(1.00));
             }
         }
     }
 
 
-    // Correlated bin-by-bin
-    //std::vector<std::string> sigmasses = {"115", "120", "124", "125", "126", "130", "135", "140", "145", "150", "155", "160", "165", "170", "175", "180", "190", "200", "210", "230", "250", "270", "300", "350", "400", "450", "500", "550", "600", "650", "700", "750", "800", "900", "1000", "1500", "2000", "2500", "3000", "4000", "5000"};
+    // // Correlated bin-by-bin
+    // std::vector<std::string> sigmasses = {"115", "120", "124", "125", "126", "130", "135", "140", "145", "150", "155", "160", "165", "170", "175", "180", "190", "200", "210", "230", "250", "270", "300", "350", "400", "450", "500", "550", "600", "650", "700", "750", "800", "900", "1000", "1500", "2000", "2500", "3000", "4000", "5000"};
 
-    // TODO:
-    // Need to hard-code number of bin from discriminant!
-    int maxbin;
-    if(DNNdiscrim){
-    if(!highmass){
-        maxbin=29;
-    }else{
-        maxbin=21;
-    }
-    }else{
-    if(!highmass){
-        maxbin=28;
-    }else{
-        maxbin=16;
-    }
-    }
-    for(int ibin=1; ibin<=maxbin; ibin++){
-    /*for(auto smass : sigmasses){
-        std::cout << "ibin"+mssmorindep+"GGH_"+smass+model+"_"+std::to_string(ibin)+"_stat" << std::endl;
+    // // TODO:
+    // // Need to hard-code number of bin from discriminant!
+    // std::map<std::string, int> maxbins = {{"Resolved", 16}, {"Boosted", 18}, {"HM", 8}};
 
-        cb.cp().process(JoinStr({ggH, ggHSBI})).attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
-        "ibin"+mssmorindep+"GGH_"+smass+model+"_"+std::to_string(ibin)+"_stat", "shape", SystMap<mass>::init({smass}, 1.00));
+    // for(auto y : runyears){
+    // for(auto pro : std::vector<std::string> {"ggh", "vbf"}){
+    // for(auto dec : std::vector<std::string> {"eqq", "mqq"}){
+    // for(auto cat : std::vector<std::string> {"Boosted", "Resolved", "HM"}){
+    // for(int ibin=1; ibin<=maxbins[cat]; ibin++){
 
-        cb.cp().process(JoinStr({{"ggWW"}, ggHSBI})).attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
-        "ibinggWW_"+std::to_string(ibin)+"_stat", "shape", SystMap<mass>::init({smass}, 1.00));
+    //      //std::cout << "ibin"+mssmorindep+"GGH"+model+"_"+std::to_string(ibin)+"_stat" << std::endl;
 
-        cb.cp().process(JoinStr({{"ggH_hww"}, ggHSBI})).attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
-        "ibinggH_hww_"+std::to_string(ibin)+"_stat", "shape", SystMap<mass>::init({smass}, 1.00));
+    //      cb.cp().process(JoinStr({ggH, ggHSBI})).attr({cat},"whad")
+    //         .attr({pro},"njet").attr({dec},"decay").attr({"2k1"+y},"year")
+    //         .attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
+    //         "CMS_hww_"+dec+"_"+pro+"_"+cat+"_201"+y+"_correlbin_GGH"+model+"_"+std::to_string(ibin)+"_stat",
+    //         "shape", SystMap<>::init(1.00));
 
-        cb.cp().process(JoinStr({qqH, qqHSBI})).attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
-        "ibin"+mssmorindep+"QQH_"+smass+model+"_"+std::to_string(ibin)+"_stat", "shape", SystMap<mass>::init({smass}, 1.00));
+    //      cb.cp().process(JoinStr({{"ggWW"}, ggHSBI})).attr({cat},"whad")
+    //         .attr({pro},"njet").attr({dec},"decay").attr({"2k1"+y},"year")
+    //         .attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
+    //         "CMS_hww_"+dec+"_"+pro+"_"+cat+"_201"+y+"_correlbin_ggWW_"+std::to_string(ibin)+"_stat",
+    //         "shape", SystMap<>::init(1.00));
 
-        cb.cp().process(JoinStr({{"qqWWqq"}, qqHSBI})).attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
-        "ibinqqWWqq_"+std::to_string(ibin)+"_stat", "shape", SystMap<mass>::init({smass}, 1.00));
+    //      cb.cp().process(JoinStr({{"ggH_hww"}, ggHSBI})).attr({cat},"whad")
+    //         .attr({pro},"njet").attr({dec},"decay").attr({"2k1"+y},"year")
+    //         .attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
+    //         "CMS_hww_"+dec+"_"+pro+"_"+cat+"_201"+y+"_correlbin_ggH_hww_"+std::to_string(ibin)+"_stat",
+    //         "shape", SystMap<>::init(1.00));
 
-        cb.cp().process(JoinStr({{"qqH_hww"}, qqHSBI})).attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
-        "ibinqqH_hww_"+std::to_string(ibin)+"_stat", "shape", SystMap<mass>::init({smass}, 1.00));
-    }*/
-        //std::cout << "ibin"+mssmorindep+"GGH"+model+"_"+std::to_string(ibin)+"_stat" << std::endl;
+    //      cb.cp().process(JoinStr({qqH, qqHSBI})).attr({cat},"whad")
+    //         .attr({pro},"njet").attr({dec},"decay").attr({"2k1"+y},"year")
+    //         .attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
+    //         "CMS_hww_"+dec+"_"+pro+"_"+cat+"_201"+y+"_correlbin_QQH"+model+"_"+std::to_string(ibin)+"_stat",
+    //         "shape", SystMap<>::init(1.00));
 
-        cb.cp().process(JoinStr({ggH, ggHSBI})).attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
-        "ibinGGH"+model+"_"+std::to_string(ibin)+"_stat", "shape", SystMap<>::init(1.00));
+    //      cb.cp().process(JoinStr({{"qqWWqq"}, qqHSBI})).attr({cat},"whad")
+    //         .attr({pro},"njet").attr({dec},"decay").attr({"2k1"+y},"year")
+    //         .attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
+    //         "CMS_hww_"+dec+"_"+pro+"_"+cat+"_201"+y+"_correlbin_qqWWqq_"+std::to_string(ibin)+"_stat",
+    //         "shape", SystMap<>::init(1.00));
 
-        cb.cp().process(JoinStr({{"ggWW"}, ggHSBI})).attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
-        "ibinggWW_"+std::to_string(ibin)+"_stat", "shape", SystMap<>::init(1.00));
+    //      cb.cp().process(JoinStr({{"qqH_hww"}, qqHSBI})).attr({cat},"whad")
+    //         .attr({pro},"njet").attr({dec},"decay").attr({"2k1"+y},"year")
+    //         .attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
+    //         "CMS_hww_"+dec+"_"+pro+"_"+cat+"_201"+y+"_correlbin_qqH_hww_"+std::to_string(ibin)+"_stat",
+    //         "shape", SystMap<>::init(1.00));
+    // }
+    // }
+    // }
+    // }
+    // }
 
-        cb.cp().process(JoinStr({{"ggH_hww"}, ggHSBI})).attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
-        "ibinggH_hww_"+std::to_string(ibin)+"_stat", "shape", SystMap<>::init(1.00));
-
-        cb.cp().process(JoinStr({qqH, qqHSBI})).attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
-        "ibinQQH"+model+"_"+std::to_string(ibin)+"_stat", "shape", SystMap<>::init(1.00));
-
-        cb.cp().process(JoinStr({{"qqWWqq"}, qqHSBI})).attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
-        "ibinqqWWqq_"+std::to_string(ibin)+"_stat", "shape", SystMap<>::init(1.00));
-
-        cb.cp().process(JoinStr({{"qqH_hww"}, qqHSBI})).attr({"semilep"},"analysis").attr({"False"},"CR").AddSyst(cb,
-        "ibinqqH_hww_"+std::to_string(ibin)+"_stat", "shape", SystMap<>::init(1.00));
-    }
 
 }
 }

@@ -18,7 +18,7 @@ parser.add_argument(
 parser.add_argument(
     '--x-title', default='m_{H} (GeV)', help="""Title for the x-axis""")
 parser.add_argument(
-    '--y-title', default='95% CL limit on #sigma(H#rightarrowWW#rightarrow2l2#nu) [pb]', help="""Title for the y-axis""")
+    '--y-title', default='95% CL limit on #sigma(H#rightarrowWW#rightarrowl#nuqq) [pb]', help="""Title for the y-axis""")
 parser.add_argument(
     '--y-axis-min', default=None, help="""Minimum for y-axis range""")
 parser.add_argument(
@@ -59,6 +59,8 @@ parser.add_argument(
     '--by-channel', action='store_true', help="""Style for limits split by channel""")
 parser.add_argument(
     '--addSM', action='store_true', help="""Add SM H->WW expectation""")
+parser.add_argument(
+    '--addPaper', action='store_true', help="""Add semilep exp. from 2016 publication""")
 args = parser.parse_args()
 
 style_dict_exponly = {
@@ -94,7 +96,7 @@ style_dict_inj = {
 style_dict_hig_17_020 = {
         'style' : {
             'exp0' : { 'LineColor' : ROOT.kBlack, 'LineStyle' : 2},
-            'exp1' : { 'FillColor' : ROOT.kGreen+1}, 
+            'exp1' : { 'FillColor' : ROOT.kGreen+1},
             'exp2' : { 'FillColor' : ROOT.kOrange}
             },
         'legend' : {
@@ -103,7 +105,7 @@ style_dict_hig_17_020 = {
             }
 
         }
-        
+
 style_dict_hig_17_020_noHbkg = {
         'style' : {
             'exp0' : { 'LineColor' : ROOT.kBlack, 'LineStyle' : 2},
@@ -121,7 +123,7 @@ style_dict_HWW = {
         'style' : {
             'obs' :  { 'LineColor' : ROOT.kBlack, 'LineStyle' : 1, 'LineWidth' : 2},
             'exp0' : { 'LineColor' : ROOT.kBlack, 'LineStyle' : 2, 'LineWidth' : 2},
-            'exp1' : { 'FillColor' : ROOT.kGreen}, 
+            'exp1' : { 'FillColor' : ROOT.kGreen},
             'exp2' : { 'FillColor' : ROOT.kYellow}
             },
         'legend' : {
@@ -189,7 +191,7 @@ else:
     legend.SetTextSize(0.04)
 
 if args.do_new_ggH:
-    if not (args.higgs_bg or args.higgs_injected): 
+    if not (args.higgs_bg or args.higgs_injected):
       legend.SetX1(legend.GetX1() - 0.1)
       legend.SetX2(legend.GetX2() - 0.1)
 
@@ -243,7 +245,7 @@ for src in args.input:
         if args.do_new_ggH:
             legend.AddEntry(dummyhist, '', 'L')
 
-    # limit.json:X => Draw a single graph for entry X in the json file 
+    # limit.json:X => Draw a single graph for entry X in the json file
     # 'limit.json:X:Title="Blah",LineColor=4,...' =>
     # as before but also apply style options to TGraph
 
@@ -262,11 +264,11 @@ for src in args.input:
             settings['LineStyle'] = j
             icol[nm] = (i+1) if (i+1) < len(defcols) else 0
         graph = plot.LimitTGraphFromJSONFile(file, splitsrc[1])
-        if args.do_new_ggH: 
-          for i in range(graph.GetN()-1,-1, -1): 
+        if args.do_new_ggH:
+          for i in range(graph.GetN()-1,-1, -1):
               x=ROOT.Double(); y=ROOT.Double()
               graph.GetPoint(i,x,y)
-              if x > 130: graph.RemovePoint(i) 
+              if x > 130: graph.RemovePoint(i)
         graphs.append(graph)
         if len(splitsrc) >= 3:
             settings.update({x.split('=')[0]: eval(x.split('=')[1]) for x in splitsrc[2].split(',')})
@@ -297,9 +299,48 @@ if args.addSM:
     pads[0].RedrawAxis()
     pads[0].RedrawAxis('g')
     pads[0].GetFrame().Draw()
-    #has_band = True  # useful to know later if we want to do style settings
-                         # based on whether or not the expected band has been drawn
 
+
+if args.addPaper:
+    SM_dict = {
+        'style' : {
+            'exp0' : { 'LineColor' : ROOT.kBlue, 'LineStyle' : 1}
+            },
+        'legend' : {
+            'exp0' : { 'Label' : 'Exp. limit HIG-17-033'}
+            }
+
+            }
+    file = "../HWW/indepSM_paper.json"
+    graph_sets.append(plot.StandardLimitsFromJSONFile(file, draw=["exp0"]))
+    if axis is None:
+        axis = plot.CreateAxisHists(len(pads), graph_sets[-1].values()[0], True)
+        DrawAxisHists(pads, axis, pads[0])
+    plot.StyleLimitBand(graph_sets[-1],overwrite_style_dict=SM_dict["style"])
+    plot.DrawLimitBand(pads[0], graph_sets[-1],legend=legend,legend_overwrite=SM_dict["legend"])
+    pads[0].RedrawAxis()
+    pads[0].RedrawAxis('g')
+    pads[0].GetFrame().Draw()
+
+    SM_dict = {
+        'style' : {
+            'exp0' : { 'LineColor' : ROOT.kRed, 'LineStyle' : 1}
+            },
+        'legend' : {
+            'exp0' : { 'Label' : 'Exp- Limit using #tau_{21}'}
+            }
+
+            }
+    file = "indepTau.json"
+    graph_sets.append(plot.StandardLimitsFromJSONFile(file, draw=["exp0"]))
+    if axis is None:
+        axis = plot.CreateAxisHists(len(pads), graph_sets[-1].values()[0], True)
+        DrawAxisHists(pads, axis, pads[0])
+    plot.StyleLimitBand(graph_sets[-1],overwrite_style_dict=SM_dict["style"])
+    plot.DrawLimitBand(pads[0], graph_sets[-1],legend=legend,legend_overwrite=SM_dict["legend"])
+    pads[0].RedrawAxis()
+    pads[0].RedrawAxis('g')
+    pads[0].GetFrame().Draw()
 
 axis[0].GetYaxis().SetTitle('95% CL limit on #sigma#font[42]{(gg#phi)}#upoint#font[52]{B}#font[42]{(#phi#rightarrow#tau#tau)}(pb)')
 if args.process == "bb#phi":
@@ -383,7 +424,7 @@ legend.Draw()
 #legend.Draw()
 
 
-plot.DrawCMSLogo(pads[0], 'CMS', args.cms_sub, 11, 0.045, 0.035, 1.2, '', 0.8)
+plot.DrawCMSLogo(pads[0], 'CMS', args.cms_sub, 11, 0.095, 0.035, 1.2, '', 0.8)
 plot.DrawTitle(pads[0], args.title_right, 3)
 plot.DrawTitle(pads[0], args.title_left, 1)
 
@@ -392,7 +433,7 @@ latex = ROOT.TLatex()
 latex.SetNDC()
 latex.SetTextSize(0.04)
 #latex.SetTextAlign(33)
-latex.DrawLatex(0.20, 0.77, args.scenario_label) #0.155, 0.75, args.scenario_label)
+latex.DrawLatex(0.25, 0.77, args.scenario_label) #0.155, 0.75, args.scenario_label)
 
 canv.Print('.pdf')
 canv.Print('.png')

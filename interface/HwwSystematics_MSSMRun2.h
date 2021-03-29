@@ -4,6 +4,6 @@
 
 namespace ch {
 // Run2 MSSM analysis systematics
-void AddMSSMFullRun2Systematics(CombineHarvester & cb, bool highmass, bool DNNdiscrim, std::string model);
+void AddMSSMFullRun2Systematics(CombineHarvester & cb, bool highmass, std::string model);
 }
 #endif

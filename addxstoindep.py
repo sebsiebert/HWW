@@ -13,8 +13,8 @@ import os
 #vbfonly=0
 folder = sys.argv[1]
 OnlyMakeSMGraph = 0 if "SM" in folder else 1
-gghonly = 1 if "ggH" in folder else 0
-vbfonly = 1 if "VBF" in folder else 0
+gghonly = 1 if "ggH" in folder or "ggf" in folder else 0
+vbfonly = 1 if "VBF" in folder or "vbf" in folder else 0
 semilep = 1 if "emi" in folder else 0
 print "Options:","OnlyMakeSMGraph =",OnlyMakeSMGraph,";","gghonly = ",gghonly,";","vbfonly = ",vbfonly,";","semilep = ",semilep
 
@@ -226,13 +226,13 @@ for mass in removethese:
   json_data_SM.pop(mass, None)
 
 #with ('/afs/cern.ch/work/s/ssiebert/CMSSW_7_4_7/src/CombineHarvester/HIG16006/output/indep.json', 'w') as file:
-#if not OnlyMakeSMGraph:
-file = open('/afs/cern.ch/work/s/ssiebert/CMSSW_10_2_13/src/CombineHarvester/'+folder+'/indep.json','w')
-json.dump(json_data, file)
-file.close()
-# fileSM = open('/afs/cern.ch/work/s/ssiebert/CMSSW_10_2_13/src/CombineHarvester/'+folder+'/indepSM.json','w')
-# json.dump(json_data_SM, fileSM)
-# fileSM.close()
+if not OnlyMakeSMGraph:
+    file = open('/afs/cern.ch/work/s/ssiebert/CMSSW_10_2_13/src/CombineHarvester/'+folder+'/indep.json','w')
+    json.dump(json_data, file)
+    file.close()
+fileSM = open('/afs/cern.ch/work/s/ssiebert/CMSSW_10_2_13/src/CombineHarvester/'+folder+'/indepSM.json','w')
+json.dump(json_data_SM, fileSM)
+fileSM.close()
 
 print "Done!"
 exit(0)

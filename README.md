@@ -1,4 +1,43 @@
-How to run this:
+Setup for running high mass semileptonic HWW limits.
+
+The script `makeLimits.py` prepares all the needed commands for morphing, datacards, workspaces, and running the limits.
+The option -dryrun allows for testing, the script will then only print the commands without running them.
+
+For cross section limits, specify `-kind indep` as well as the desired scenarios: `-scenario sm vbf ggf float` (any combination of these should work). The year can be given as single year or all three years like `-years 16` or `-years 16 17 18`. Finally specify the next step, it will be one of `datacards`, `workspaces`, `limits`, `collect`, `plot`.
+
+Example usage for cross section limits is:
+1. Go to parent directory of HWW (this is currently a hardcoded requirement for `makeLimits.py` to work)
+
+  ```cd ..```
+
+2. Run morphing and fix rateparam
+
+```python HWW/makeLimits.py -kind indep -cats res bos -years 18 -scenario sm vbf ggf float -step datacards```
+
+3. Make workspaces
+
+```python HWW/makeLimits.py -kind indep -cats res bos -years 18 -scenatio sm vbf ggf float -step workspaces```
+
+4. Run limits
+
+```python HWW/makeLimits.py -kind indep -cats res bos -years 18 -scenatio sm vbf ggf float -step limits```
+
+5. After all the limits have been computed and the jobs finished, collect the outputs.
+
+```python HWW/makeLimits.py -kind indep -cats res bos -years 18 -scenatio sm vbf ggf float -step collect```
+
+6. Make plots out of the collected outputs:
+
+```python HWW/makeLimits.py -kind indep -cats res bos -years 18 -scenatio sm vbf ggf float -step plot```
+
+<br/><br/>
+
+The idea is the same for MSSM limits, only `-kind mssm`, the year(s) and the step need to be given.
+
+
+<br/><br/><br/><br/><br/><br/>
+
+How to run this (old text):
 
 1. Run `MorphingMSSMFullRun2_HWW`. Add the options `--output_folder someoutputdirectory` and add what year to run, like `--do2016semi 1`. For model independent limits also add the option `--mass MH`.
 

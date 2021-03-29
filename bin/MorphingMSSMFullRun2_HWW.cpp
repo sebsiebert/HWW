@@ -149,47 +149,65 @@ int main(int argc, char** argv) {
   shapedir = "/afs/cern.ch/work/s/ssiebert/CMSSW_10_6_4/src/PlotsConfigurations/Configurations/HWWSemiLepHighMass/"+shapedir+"/";
 
   if (do2016semi){
-    input_dir["eqq6"]        = shapedir+"Full2016_v7/rootFile/plots_hm_resolv_2016_v7.root";
+    input_dir["eqq6"]        = shapedir+"Full2016_v7/rootFile/plots_hmlnjj_2016v7.root";
     input_dir["eqq6_top"]    = input_dir["eqq6"];
     input_dir["eqq6_wj"]     = input_dir["eqq6"];
     input_dir["mqq6"]        = input_dir["eqq6"];
     input_dir["mqq6_top"]    = input_dir["eqq6"];
     input_dir["mqq6_wj"]     = input_dir["eqq6"];
-    input_dir["eqq6_bs"]     = shapedir+"Full2016_v7/rootFile/plots_hm_boost_2016_v7.root";
+    input_dir["eqq6_bs"]     = shapedir+"Full2016_v7/rootFile/plots_hmlnjj_2016v7.root";
     input_dir["eqq6_top_bs"] = input_dir["eqq6_bs"];
     input_dir["eqq6_wj_bs"]  = input_dir["eqq6_bs"];
     input_dir["mqq6_bs"]     = input_dir["eqq6_bs"];
     input_dir["mqq6_top_bs"] = input_dir["eqq6_bs"];
     input_dir["mqq6_wj_bs"]  = input_dir["eqq6_bs"];
+    // input_dir["eqq6_hm"]     = shapedir+"Full2016_v7/rootFile/plots_hmlnjj_2016_v7.root";
+    // input_dir["eqq6_top_hm"] = input_dir["eqq6_hm"];
+    // input_dir["eqq6_wj_hm"]  = input_dir["eqq6_hm"];
+    // input_dir["mqq6_hm"]     = input_dir["eqq6_hm"];
+    // input_dir["mqq6_top_hm"] = input_dir["eqq6_hm"];
+    // input_dir["mqq6_wj_hm"]  = input_dir["eqq6_hm"];
   }
   if (do2017semi){
-    input_dir["eqq7"]        = shapedir+"Full2017_v7/rootFile/plots_hm_resolv_2017_v7.root";
+    input_dir["eqq7"]        = shapedir+"Full2017_v7/rootFile/plots_hmlnjj_2017v7.root";
     input_dir["eqq7_top"]    = input_dir["eqq7"];
     input_dir["eqq7_wj"]     = input_dir["eqq7"];
     input_dir["mqq7"]        = input_dir["eqq7"];
     input_dir["mqq7_top"]    = input_dir["eqq7"];
     input_dir["mqq7_wj"]     = input_dir["eqq7"];
-    // input_dir["eqq7_bs"]     = shapedir+"Full2017_v7/rootFile/plots_hm_boost_2017_v7.root";
-    // input_dir["eqq7_top_bs"] = input_dir["eqq7_bs"];
-    // input_dir["eqq7_wj_bs"]  = input_dir["eqq7_bs"];
-    // input_dir["mqq7_bs"]     = input_dir["eqq7_bs"];
-    // input_dir["mqq7_top_bs"] = input_dir["eqq7_bs"];
-    // input_dir["mqq7_wj_bs"]  = input_dir["eqq7_bs"];
+    input_dir["eqq7_bs"]     = shapedir+"Full2017_v7/rootFile/plots_hmlnjj_2017v7.root";
+    input_dir["eqq7_top_bs"] = input_dir["eqq7_bs"];
+    input_dir["eqq7_wj_bs"]  = input_dir["eqq7_bs"];
+    input_dir["mqq7_bs"]     = input_dir["eqq7_bs"];
+    input_dir["mqq7_top_bs"] = input_dir["eqq7_bs"];
+    input_dir["mqq7_wj_bs"]  = input_dir["eqq7_bs"];
+    // input_dir["eqq7_hm"]     = shapedir+"Full2017_v7/rootFile/plots_hmlnjj_2017_v7.root";
+    // input_dir["eqq7_top_hm"] = input_dir["eqq7_hm"];
+    // input_dir["eqq7_wj_hm"]  = input_dir["eqq7_hm"];
+    // input_dir["mqq7_hm"]     = input_dir["eqq7_hm"];
+    // input_dir["mqq7_top_hm"] = input_dir["eqq7_hm"];
+    // input_dir["mqq7_wj_hm"]  = input_dir["eqq7_hm"];
   }
 
   if (do2018semi){
-    input_dir["eqq8"]        = shapedir+"Full2018_v7/rootFile/plots_hm_resolv_2018_v7.root";
+    input_dir["eqq8"]        = shapedir+"Full2018_v7/rootFile/plots_hmlnjj_2018v7.root";
     input_dir["eqq8_top"]    = input_dir["eqq8"];
     input_dir["eqq8_wj"]     = input_dir["eqq8"];
     input_dir["mqq8"]        = input_dir["eqq8"];
     input_dir["mqq8_top"]    = input_dir["eqq8"];
     input_dir["mqq8_wj"]     = input_dir["eqq8"];
-    input_dir["eqq8_bs"]     = shapedir+"Full2018_v7/rootFile/plots_hm_boost_2018_v7.root";
+    input_dir["eqq8_bs"]     = shapedir+"Full2018_v7/rootFile/plots_hmlnjj_2018v7.root";
     input_dir["eqq8_top_bs"] = input_dir["eqq8_bs"];
     input_dir["eqq8_wj_bs"]  = input_dir["eqq8_bs"];
     input_dir["mqq8_bs"]     = input_dir["eqq8_bs"];
     input_dir["mqq8_top_bs"] = input_dir["eqq8_bs"];
     input_dir["mqq8_wj_bs"]  = input_dir["eqq8_bs"];
+    // input_dir["eqq8_hm"]     = shapedir+"Full2018_v7/rootFile/plots_hmlnjj_2018_v7.root";
+    // input_dir["eqq8_top_hm"] = input_dir["eqq8_hm"];
+    // input_dir["eqq8_wj_hm"]  = input_dir["eqq8_hm"];
+    // input_dir["mqq8_hm"]     = input_dir["eqq8_hm"];
+    // input_dir["mqq8_top_hm"] = input_dir["eqq8_hm"];
+    // input_dir["mqq8_wj_hm"]  = input_dir["eqq8_hm"];
   }
 
   VString chns;
@@ -248,29 +266,84 @@ int main(int argc, char** argv) {
     {12, "MuCh_GGF_ResolvedSB_"},
     {13, "MuCh_VBF_ResolvedSB_"},
     };
-  cats["eqq"+year+"_bs_13TeV"] = {
-    {6, "ElCh_GGF_BoostedSR_"},
-    {7, "ElCh_VBF_BoostedSR_"},
+  
+  auto deepAK8_tagging = true;
+  if (! deepAK8_tagging) {
+    cats["eqq"+year+"_bs_13TeV"] = {
+      {6, "ElCh_GGF_BoostedSR_"},
+      {7, "ElCh_VBF_BoostedSR_"},
+      };
+    cats["eqq"+year+"_top_bs_13TeV"] = {
+      {10, "ElCh_GGF_BoostedTopCR_"},
+      {11, "ElCh_VBF_BoostedTopCR_"},
+      };
+    cats["eqq"+year+"_wj_bs_13TeV"] = {
+      {12, "ElCh_GGF_BoostedSB_"},
+      {13, "ElCh_VBF_BoostedSB_"},
+      };
+    cats["mqq"+year+"_bs_13TeV"] = {
+      {6, "MuCh_GGF_BoostedSR_"},
+      {7, "MuCh_VBF_BoostedSR_"},
+      };
+    cats["mqq"+year+"_top_bs_13TeV"] = {
+      {10, "MuCh_GGF_BoostedTopCR_"},
+      {11, "MuCh_VBF_BoostedTopCR_"},
+      };
+    cats["mqq"+year+"_wj_bs_13TeV"] = {
+      {12, "MuCh_GGF_BoostedSB_"},
+      {13, "MuCh_VBF_BoostedSB_"},
+      };
+  }
+  else {
+    cats["eqq"+year+"_bs_13TeV"] = {
+      {6, "ElCh_10_GGF_AK8SR_"},
+      {7, "ElCh_10_VBF_AK8SR_"},
+      };
+    cats["eqq"+year+"_top_bs_13TeV"] = {
+      {10, "ElCh_10_GGF_AK8TopCR_"},
+      {11, "ElCh_10_VBF_AK8TopCR_"},
+      };
+    cats["eqq"+year+"_wj_bs_13TeV"] = {
+      {12, "ElCh_10_GGF_AK8SB_"},
+      {13, "ElCh_10_VBF_AK8SB_"},
+      };
+    cats["mqq"+year+"_bs_13TeV"] = {
+      {6, "MuCh_10_GGF_AK8SR_"},
+      {7, "MuCh_10_VBF_AK8SR_"},
+      };
+    cats["mqq"+year+"_top_bs_13TeV"] = {
+      {10, "MuCh_10_GGF_AK8TopCR_"},
+      {11, "MuCh_10_VBF_AK8TopCR_"},
+      };
+    cats["mqq"+year+"_wj_bs_13TeV"] = {
+      {12, "MuCh_10_GGF_AK8SB_"},
+      {13, "MuCh_10_VBF_AK8SB_"},
+      };
+  }
+
+  cats["eqq"+year+"_hm_13TeV"] = {
+    {6, "ElCh_GGF_55HMSR_"},
+    {7, "ElCh_VBF_55HMSR_"},
     };
-  cats["eqq"+year+"_top_bs_13TeV"] = {
-    {10, "ElCh_GGF_BoostedTopCR_"},
-    {11, "ElCh_VBF_BoostedTopCR_"},
+  cats["eqq"+year+"_top_hm_13TeV"] = {
+    {10, "ElCh_GGF_55HMTopCR_"},
+    {11, "ElCh_VBF_55HMTopCR_"},
     };
-  cats["eqq"+year+"_wj_bs_13TeV"] = {
-    {12, "ElCh_GGF_BoostedSB_"},
-    {13, "ElCh_VBF_BoostedSB_"},
+  cats["eqq"+year+"_wj_hm_13TeV"] = {
+    {12, "ElCh_GGF_55HMSB_"},
+    {13, "ElCh_VBF_55HMSB_"},
     };
-  cats["mqq"+year+"_bs_13TeV"] = {
-    {6, "MuCh_GGF_BoostedSR_"},
-    {7, "MuCh_VBF_BoostedSR_"},
+  cats["mqq"+year+"_hm_13TeV"] = {
+    {6, "MuCh_GGF_55HMSR_"},
+    {7, "MuCh_VBF_55HMSR_"},
     };
-  cats["mqq"+year+"_top_bs_13TeV"] = {
-    {10, "MuCh_GGF_BoostedTopCR_"},
-    {11, "MuCh_VBF_BoostedTopCR_"},
+  cats["mqq"+year+"_top_hm_13TeV"] = {
+    {10, "MuCh_GGF_55HMTopCR_"},
+    {11, "MuCh_VBF_55HMTopCR_"},
     };
-  cats["mqq"+year+"_wj_bs_13TeV"] = {
-    {12, "MuCh_GGF_BoostedSB_"},
-    {13, "MuCh_VBF_BoostedSB_"},
+  cats["mqq"+year+"_wj_hm_13TeV"] = {
+    {12, "MuCh_GGF_55HMSB_"},
+    {13, "MuCh_VBF_55HMSB_"},
     };
 
   }
@@ -280,8 +353,13 @@ int main(int argc, char** argv) {
   for (auto it : input_dir){
     if(it.first.find("qq") != std::string::npos && it.first.find("bs") != std::string::npos){ //Semilep boosted
       masses[it.first] = {"400", "450", "500", "550", "600", "650", "700", "750", "800", "900", "1000", "1500", "2000", "2500", "3000", "4000", "5000"};
-    }else if(it.first.find("qq") != std::string::npos && it.first.find("bs") == std::string::npos){ //Semilep resolved
+      // masses[it.first] = {"400", "450", "550", "600", "650", "700", "750", "800", "1000", "2000", "2500", "3000", "4000", "5000"};
+    }else if(it.first.find("qq") != std::string::npos && it.first.find("bs") == std::string::npos && it.first.find("hm") == std::string::npos){ //Semilep resolved
       masses[it.first] = {"115", "120", "124", "125", "126", "130", "135", "140", "145", "150", "155", "160", "165", "170", "175", "180", "190", "200", "210", "230", "250", "270", "300", "350", "400", "450", "500", "550", "600"};
+      // masses[it.first] = {"115", "120", "124", "125", "126", "130", "135", "140", "145", "155", "160", "165", "170", "175", "180", "200", "210", "230", "250", "270", "300", "350", "400", "450", "550", "600"};
+    }
+    else if(it.first.find("qq") != std::string::npos && it.first.find("hm") != std::string::npos){ //Semilep other
+      masses[it.first] = {"600", "650", "700", "750", "800", "900", "1000", "2000", "2500", "3000", "4000", "5000"};
     }
   }
 
@@ -308,8 +386,7 @@ int main(int argc, char** argv) {
           });
   }
 
-
-  ch::AddMSSMFullRun2Systematics(cb, highindep, DNNdiscrim, model);
+  ch::AddMSSMFullRun2Systematics(cb, highindep, model);
   //! [part7]
 
   for (string chn : chns) {
@@ -318,6 +395,7 @@ int main(int argc, char** argv) {
 
     std::string discrim = "resolvHiggsMass";
     if (chn.find("bs") != std::string::npos) discrim = "boostHiggsMass_vbf";
+    if (chn.find("hm") != std::string::npos) discrim = "hmHiggsMass";
     if (chn.find("top") != std::string::npos || chn.find("wj") != std::string::npos) discrim = "events";
 
     cb.cp().channel({chn}).backgrounds().ExtractShapes(
@@ -611,15 +689,16 @@ if (do_bbb){
                 }), cb);
   }
   // And now do bbb for the control region with a slightly different config:
-  auto bbb_ctl = ch::BinByBinFactory()
-   .SetPattern("CMS_$ANALYSIS_$BIN_$ERA_$PROCESS_bin_$#")
-   .SetAddThreshold(0.)
-   .SetMergeThreshold(0.4)
-   .SetFixNorm(false)  // contrary to signal region, bbb *should* change yield here
-   .SetVerbosity(1);
-  // Will merge but only for non W and QCD processes, to be on the safe side
-  bbb_ctl.MergeBinErrors(cb.cp().process({"Wjets", "top"}, false).backgrounds().FilterProcs(BinIsNotControlRegion));
-  bbb_ctl.AddBinByBin(cb.cp().process({"Wjets", "top"}, false).backgrounds().FilterProcs(BinIsNotControlRegion), cb); // Added .backgrounds() here when not removing signal from CR
+  // Don't do bbb for CR because of rateParam
+  // auto bbb_ctl = ch::BinByBinFactory()
+  //  .SetPattern("CMS_$ANALYSIS_$BIN_$ERA_$PROCESS_bin_$#")
+  //  .SetAddThreshold(0.)
+  //  .SetMergeThreshold(0.4)
+  //  .SetFixNorm(false)  // contrary to signal region, bbb *should* change yield here
+  //  .SetVerbosity(1);
+  // // Will merge but only for non W and QCD processes, to be on the safe side
+  // bbb_ctl.MergeBinErrors(cb.cp().process({"Wjets", "top"}, false).backgrounds().FilterProcs(BinIsNotControlRegion));
+  // bbb_ctl.AddBinByBin(cb.cp().process({"Wjets", "top"}, false).backgrounds().FilterProcs(BinIsNotControlRegion), cb); // Added .backgrounds() here when not removing signal from CR
   cout << " done\n";
 }
 
@@ -686,30 +765,24 @@ if (do_bbb){
   writer.SetVerbosity(1);
   writercmb.SetVerbosity(1);
 
-  writer.WriteCards("cmb", cb);
-  writercmb.WriteCards("cmb", cb);
+  // writer.WriteCards("cmb", cb);
+  // writercmb.WriteCards("cmb", cb);
 
   if (!combcard_only){
-    for (auto chn : chns) {
-      if (chn.find("dy") != std::string::npos  or chn.find("top") != std::string::npos) {
-        continue;
-      }
-      // Add per channel-category
-      //writer.WriteCards("hww_"+chn+"_0jet_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"0j"},"njet"));
-      //writer.WriteCards("hww_"+chn+"_1jet_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"1j"},"njet"));
-      //writer.WriteCards("hww_"+chn+"_2jet_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"2j"},"njet"));
-      writer.WriteCards("hww_"+chn+"_ggF_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"ggh"},"njet"));
-      writer.WriteCards("hww_"+chn+"_VBF_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"vbf"},"njet"));
-      // Add per channel
-      writer.WriteCards("hww_"+chn+"_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({chn},"decay"));
+    // for (auto chn : chns) {
+    //   if (chn.find("dy") != std::string::npos  or chn.find("top") != std::string::npos) {
+    //     continue;
+    //   }
+    //   // Add per channel-category
+    //   writer.WriteCards("hww_"+chn+"_ggF_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"ggh"},"njet"));
+    //   writer.WriteCards("hww_"+chn+"_VBF_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"vbf"},"njet"));
+    //   // Add per channel
+    //   writer.WriteCards("hww_"+chn+"_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({chn},"decay"));
 
-      //writercmb.WriteCards("hww_"+chn+"_0jet_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"0j"},"njet"));
-      //writercmb.WriteCards("hww_"+chn+"_1jet_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"1j"},"njet"));
-      //writercmb.WriteCards("hww_"+chn+"_2jet_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"2j"},"njet"));
-      writercmb.WriteCards("hww_"+chn+"_ggF_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"ggh"},"njet"));
-      writercmb.WriteCards("hww_"+chn+"_VBF_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"vbf"},"njet"));
-      writercmb.WriteCards("hww_"+chn+"_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({chn},"decay"));
-    }
+    //   writercmb.WriteCards("hww_"+chn+"_ggF_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"ggh"},"njet"));
+    //   writercmb.WriteCards("hww_"+chn+"_VBF_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({"vbf"},"njet"));
+    //   writercmb.WriteCards("hww_"+chn+"_13TeV", cb.cp().channel({chn,chn+"_dy",chn+"_top"}).attr({chn},"decay"));
+    // }
     // Add per category
     writer.WriteCards("hww_ggF_13TeV", cb.cp().attr({"ggh"},"njet"));
     writer.WriteCards("hww_VBF_13TeV", cb.cp().attr({"vbf"},"njet"));
@@ -730,10 +803,15 @@ if (do_bbb){
   // NEED to split boosed/resolved too
   // bos+res is either full comb, or semilep only
   if (do2016semi or do2017semi or do2018semi){
-    writer.WriteCards("hww_boosted_13TeV", cb.cp().attr({"boosted"},"whad"));
-    writer.WriteCards("hww_resolved_13TeV", cb.cp().attr({"resolved"},"whad"));
-    writercmb.WriteCards("hww_boosted_13TeV", cb.cp().attr({"boosted"},"whad"));
-    writercmb.WriteCards("hww_resolved_13TeV", cb.cp().attr({"resolved"},"whad"));
+    writer.WriteCards("hww_boosted_13TeV", cb.cp().attr({"Boosted"},"whad"));
+    writer.WriteCards("hww_resolved_13TeV", cb.cp().attr({"Resolved"},"whad"));
+    writer.WriteCards("hww_res+bos_13TeV", cb.cp().attr({"Resolved", "Boosted"},"whad"));
+    writer.WriteCards("hww_hm_13TeV", cb.cp().attr({"HM"},"whad"));
+
+    writercmb.WriteCards("hww_boosted_13TeV", cb.cp().attr({"Boosted"},"whad"));
+    writercmb.WriteCards("hww_resolved_13TeV", cb.cp().attr({"Resolved"},"whad"));
+    writercmb.WriteCards("hww_res+bos_13TeV", cb.cp().attr({"Resolved", "Boosted"},"whad"));
+    writercmb.WriteCards("hww_hm_13TeV", cb.cp().attr({"HM"},"whad"));
   }
 
   cb.PrintAll();
